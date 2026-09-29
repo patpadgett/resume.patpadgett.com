@@ -174,6 +174,9 @@ Selection uses a red background with white text, not red text on white. Body lin
 
 ## Typography
 
+### Fallback contract
+D-DIN is self-hosted and preloaded (Exp Bold, Bold, Regular; Italic lazy). If the woff2 files never arrive, `"D-DIN Fallback"` / `"D-DIN Exp Fallback"` take over: `local()` Liberation Sans / Arial / Helvetica with `size-adjust` (92.4% regular, 87.7% bold, 92.8% italic, 92.6% Exp Bold) and ascent/descent overrides measured in Chromium against the resume's own text, so both fixed sheets keep their line breaks and nothing clips. `render.js --final` aborts every font request and fails the build (exit 3) if either flow overflows or the last list item leaves sheet 2. Re-measure the ratios (scratch `fallback_metrics.js`) whenever a face is swapped.
+
 D-DIN is self-hosted from `assets/fonts/`: regular 400, bold 700 and italic 400; D-DIN Exp supplies expanded bold 700. `build.py` copies the accompanying OFL license. The exact fallback stacks and primary sizes are in the frontmatter. No monospace display face or icon font participates in the sheet.
 
 ### Hierarchy

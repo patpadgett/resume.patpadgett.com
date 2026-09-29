@@ -144,7 +144,8 @@
    "Snippets inherit root custom properties and loaded self-hosted font faces.",
    "Updated after the finish-review fix batch: section rules medium pen, heavy header-closing rule, 78pt detail circle, FIG regex widened to counts and scale.",
    "Post-critique fix round: section order summary/achievements/experience/skills/projects/education; two-tier figures (.fig red outcomes, .num ink scale/tenure); phone header grid name|portrait; 44px one-row toolbar; CSS hairline contact separators; screen-only .cont continuation cue; colophon CTA close; REV letter.",
-   "Round-2 critique fixes: aria-labels on toolbar anchors; skip link -> #resume; composed 1200x630 og card (.og.html) at 1x; phone header row-gap 4px, 96px portrait to 340px; contact rows 40px with no negative margins; (pointer: coarse) 44px/40px targets in any orientation; NOTES legend names the summary repeats; master copy pass (HP-UX, Tier III, ELK Stack, ksh, spaced range, past tense)."
+   "Round-2 critique fixes: aria-labels on toolbar anchors; skip link -> #resume; composed 1200x630 og card (.og.html) at 1x; phone header row-gap 4px, 96px portrait to 340px; contact rows 40px with no negative margins; (pointer: coarse) 44px/40px targets in any orientation; NOTES legend names the summary repeats; master copy pass (HP-UX, Tier III, ELK Stack, ksh, spaced range, past tense).",
+   "Round-3 critique fixes: metric-matched local fallback faces (size-adjust/ascent/descent overrides) + fonts-blocked build gate; .skip hidden in print; font preloads; og:image:alt describes the composed card; PDF author/subject/keywords/creator set from the master; NOTES 2 shortened to the literal legend; KEYWORDS trailer documented as ATS-only."
   ]
  },
  "components": [

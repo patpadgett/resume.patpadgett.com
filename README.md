@@ -58,7 +58,9 @@ Anti-reference (earlier Padgett resume builds, all different worlds): NOC page (
 - Mobile 390 and 320: 0px horizontal overflow. Print emulation: 2 pages, toolbar and colophon hidden.
 - Two vision inspection rounds fixed: header grouping, rule rhythm, zone band geometry from the border box, title block cell collision, notes alignment, figure splitting across lines.
 - Finish review and documentation: see the commit message and `DESIGN.md`.
-- Critique rounds (`.impeccable/critique/`): 23/32 -> 23/32 (round 2 widened to print, zoom, landscape, share card, keyboard, PDF pages, proofread); all five round-2 issues fixed in the following commit.
+- Critique rounds (`.impeccable/critique/`): 23 -> 23 -> 23 /32 across three rounds, each trading a fixed heuristic for a newly tested failure state (round 2: print, zoom, landscape, share card, keyboard, PDF pages, proofread; round 3: fonts blocked, print without backgrounds, forced colors, dark scheme, feed-size preview, ultrawide, AT order, DOCX/TXT parity, PDF properties, page weight, meta). All issues from each round are fixed in the commit that follows it.
+- Fonts-blocked resilience: `styles.css` declares metric-matched `local()` fallbacks (`D-DIN Fallback`, `D-DIN Exp Fallback`) so the two fixed sheets hold their line breaks without the woff2 files; `render.js --final` re-renders with every font request aborted and fails the build if either sheet overflows.
+- KEYWORDS trailer: the TXT, MD and DOCX twins end with a KEYWORDS section (the master's ATS line). It is an ATS-only appendix by policy - parsers read it, humans read the sheets - and is deliberately absent from the HTML/PDF, which have no room for a third sheet. Everything above that trailer is verbatim across all four formats.
 
 ## Before this goes live (owner)
 

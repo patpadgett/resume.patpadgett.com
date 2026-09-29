@@ -79,6 +79,15 @@ const PDF = 'Patrick_Padgett_Resume.pdf';
   } else {
     const over = await page.evaluate(() => [...document.querySelectorAll('.sheet')].map(s => { const f = s.querySelector('.flow'); return { sheet: s.dataset.sheet, over: f.scrollHeight - f.clientHeight, free: f.clientHeight - f.scrollHeight }; }));
     console.log('overflow check:', JSON.stringify(over));
+    // fonts-blocked gate: the metric-matched local fallbacks must hold both sheets when the woff2 files never arrive
+    const fb = await browser.newPage({ viewport: { width: 1366, height: 900 } });
+    await fb.route(/assets\/fonts\//, rt => rt.abort());
+    await fb.goto('file://' + path.join(ROOT, 'index.html')); await fb.evaluate(() => document.fonts.ready); await fb.waitForTimeout(150);
+    const overFb = await fb.evaluate(() => [...document.querySelectorAll('.sheet .flow')].map((f, i) => ({ sheet: i + 1, over: f.scrollHeight - f.clientHeight, family: getComputedStyle(document.querySelector('h1')).fontFamily.split(',')[0] })));
+    const fbLast = await fb.evaluate(() => { const li = [...document.querySelectorAll('.sheet[data-sheet="2"] .flow li')]; const l = li[li.length - 1].getBoundingClientRect(); const f = document.querySelector('.sheet[data-sheet="2"] .flow').getBoundingClientRect(); return { lastBottom: Math.round(l.bottom), flowBottom: Math.round(f.bottom), fits: l.bottom <= f.bottom + 0.5 }; });
+    console.log('fonts-blocked overflow check:', JSON.stringify(overFb), 'last item fits:', JSON.stringify(fbLast));
+    if (overFb.some(o => o.over > 0) || !fbLast.fits) { console.error('FAIL: sheets overflow with fonts blocked'); process.exit(3); }
+    await fb.close();
     if (over.some(o => o.over > 0)) { console.error('OVERFLOW on a sheet'); process.exitCode = 3; }
     // PDF
     await page.emulateMedia({ media: 'print' });
