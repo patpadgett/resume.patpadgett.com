@@ -43,7 +43,10 @@ a { color: var(--red); text-decoration: underline; text-decoration-thickness: va
 a:hover { text-decoration-thickness: var(--med); }
 :focus-visible { outline: 2px solid var(--red); outline-offset: 2px; border-radius: 1px; }
 
-/* ---------------------------------------------------------------- toolbar (screen only) */
+/* ---------------------------------------------------------------- skip link + toolbar (screen only) */
+.skip { position: absolute; left: 12px; top: -48px; z-index: 6; padding: 10px 14px; background: var(--ink); color: var(--paper); font: 600 12px/1 "D-DIN", sans-serif; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; }
+.skip:focus-visible { top: 8px; outline-offset: 0; }
+.board:focus { outline: none; }
 .bar {
   position: sticky; top: 0; z-index: 5;
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
@@ -197,19 +200,20 @@ ul.exp { margin-bottom: 1pt; }
   .btn { flex: 1 1 0; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; padding: 0 8px; font-size: 12px; letter-spacing: 0.08em; }
   .btn .long { display: none; } .btn .short { display: inline; }
   .contact { display: block; }
-  .contact > span { display: block; padding: 2px 0; }
+  .contact > span { display: block; }
   .contact > span + span::before { display: none; }
-  .contact a { display: inline-block; padding: 6px 0; margin: -6px 0; }
+  .contact a, .contact > span { display: block; min-height: 40px; line-height: 40px; padding: 0; margin: 0; }
   .colophon-cta .btn { flex: 1 1 100%; }
   /* phone header: [ name | portrait ] on one row, everything else full width beneath */
-  .head { display: grid; grid-template-columns: 1fr 96px; column-gap: 12px; align-items: start; }
+  .head { display: grid; grid-template-columns: 1fr 96px; column-gap: 12px; row-gap: 4px; align-items: start; padding-bottom: 10px; }
   .head-text { display: contents; }
   .head h1 { grid-column: 1; grid-row: 1; align-self: center; margin: 0; }
   .head .detail { grid-column: 2; grid-row: 1; width: 96px; margin: 0; }
   .detail svg { width: 100%; height: auto; }
-  .headline { grid-column: 1 / -1; margin-top: 10px; }
+  .headline { grid-column: 1 / -1; margin: 6px 0 2px; }
   .contact { grid-column: 1 / -1; }
   .contact a { word-break: keep-all; overflow-wrap: normal; }
+  .contact + .contact { margin-top: 0; }
   h1 { font-size: clamp(22px, 6.8vw, 34px); }
   .headline { font-size: 15px; line-height: 20px; }
   .contact { font-size: 14px; line-height: 21px; }
@@ -225,9 +229,17 @@ ul.exp { margin-bottom: 1pt; }
   .flow .sabb { margin: 12px 0 0; }
   .colophon { font-size: 13px; line-height: 20px; padding: 4px 12px 40px; }
   .contact { font-size: 13px; }
+  .cont { left: 28px; top: 20px; }
+}
+@media screen and (max-width: 340px) {
   .head { grid-template-columns: 1fr 84px; }
   .head .detail { width: 84px; }
-  .cont { left: 28px; top: 20px; }
+}
+
+/* ---------------------------------------------------------------- coarse pointers: targets stay 44px in any orientation */
+@media screen and (pointer: coarse) {
+  .btn { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+  .contact a { display: inline-block; min-height: 40px; line-height: 40px; }
 }
 
 /* ---------------------------------------------------------------- print: the sheet IS the page */

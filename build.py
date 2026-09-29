@@ -32,12 +32,12 @@ PROFILE = dict(
     # TECHNICAL SKILLS: master category label -> a SUBSET of that category's master list (selection, never invention)
     skills=[
         ("Telecom billing / mediation", "billing mediation, revenue assurance, CDR/EDR/AMA usage-record pipelines, rating and charging, Nortel / Ericsson / Lucent switch data formats, BSS/OSS, mediation rules, data reconciliation, Tier III production support, root cause analysis, ETL, Oracle SQL"),
-        ("Unix / Linux / OS", "RHEL, CentOS, Debian, Ubuntu, HP/UX, Solaris, FreeBSD, Red Hat Satellite, Windows Server"),
+        ("Unix / Linux / OS", "RHEL, CentOS, Debian, Ubuntu, HP-UX, Solaris, FreeBSD, Red Hat Satellite, Windows Server"),
         ("IaC & configuration management", "Terraform, Ansible (playbooks, roles, YAML, Jinja2), CloudFormation, Puppet, Chef"),
         ("CI/CD & version control", "Azure DevOps, GitHub Actions, GitLab CI/CD, Jenkins, Octopus Deploy, Git, pull-request code review and branching/tagging strategy; canary / A-B / blue-green deployment"),
         ("Cloud, containers & virtualization", "AWS (EC2, S3, RDS, VPC), Microsoft Azure (VMs, Storage, Virtual Networking, Azure DevOps), Google Cloud Platform, hybrid cloud, Docker, Kubernetes, microservices, KVM, VMware ESX/vCenter/Horizon"),
         ("Monitoring & observability", "ELK Stack (Elasticsearch, Logstash, Kibana), Splunk, Dynatrace, Prometheus, Grafana, centralized logging, alerting and dashboards, SLOs/SLIs, on-call incident response, postmortems and root cause analysis (RCA), SRE practices"),
-        ("Programming & scripting", "Python, Perl, PHP, Ruby, C / C++ / C#, Java, JavaScript / TypeScript, SQL, bash / korn / zsh, PowerShell; Ruby on Rails, Django, .NET Core, REST API design; Oracle, MySQL, PostgreSQL"),
+        ("Programming & scripting", "Python, Perl, PHP, Ruby, C / C++ / C#, Java, JavaScript / TypeScript, SQL, bash / ksh / zsh, PowerShell; Ruby on Rails, Django, .NET Core, REST API design; Oracle, MySQL, PostgreSQL"),
         ("Operations & ITSM", "on-call and Tier 2/3 escalation, troubleshooting, release and change management, capacity planning, backup and disaster recovery, SOPs and runbooks, vendor management, ITIL, SDLC (Agile, Scrum, Waterfall), Jira Service Management, Confluence"),
     ],
     # experience bullets: substrings of master bullets, in display order (signature metrics live in KEY ACHIEVEMENTS, not repeated)
@@ -204,7 +204,7 @@ def title_block(T, sheet, total):
     return f'<svg class="tb" aria-hidden="true" viewBox="0 0 {TB_W} {TB_H}" width="{TB_W}pt" height="{TB_H}pt">{"".join(L)}</svg>'
 
 NOTES = ["ALL FIGURES ARE PRODUCTION RESULTS VERIFIED BY THE CANDIDATE.",
-         "RED FIGURES ARE MEASURED OUTCOMES; BOLD BLACK FIGURES ARE SCALE AND TENURE. RED UNDERLINED TEXT IS A LIVE LINK.",
+         "RED FIGURES ARE MEASURED OUTCOMES, STATED ONCE UNDER KEY ACHIEVEMENTS; BOLD BLACK FIGURES ARE SCALE, TENURE AND REPEATS. RED UNDERLINED TEXT IS A LIVE LINK.",
          "LATEST REVISION OF THIS SHEET: RESUME.PATPADGETT.COM"]
 NB_W, NB_H = 232.0, 60.0
 def notes_block():
@@ -343,15 +343,16 @@ def page_html(T, blocks, paginated=None):
 <script type="application/ld+json">{ldjson}</script>
 </head>
 <body>
+<a class="skip" href="#resume">Skip to the resume</a>
 <nav class="bar" aria-label="Resume downloads">
   <a class="bar-name" href="{SITE}/">PATRICK PADGETT <span>RESUME</span></a>
   <div class="bar-actions">
-    <a class="btn btn-ink" href="{PDF_NAME}" download><span class="long">Download PDF</span><span class="short" aria-hidden="true">PDF</span></a>
-    <a class="btn" href="Patrick_Padgett_Resume.docx" download><span class="long">Word (.docx)</span><span class="short" aria-hidden="true">Word</span></a>
-    <a class="btn" href="Patrick_Padgett_Resume.txt" download><span class="long">Plain text</span><span class="short" aria-hidden="true">Text</span></a>
+    <a class="btn btn-ink" href="{PDF_NAME}" download aria-label="Download resume as PDF"><span class="long">Download PDF</span><span class="short">PDF</span></a>
+    <a class="btn" href="Patrick_Padgett_Resume.docx" download aria-label="Download resume as Word document"><span class="long">Word (.docx)</span><span class="short">Word</span></a>
+    <a class="btn" href="Patrick_Padgett_Resume.txt" download aria-label="Download resume as plain text"><span class="long">Plain text</span><span class="short">Text</span></a>
   </div>
 </nav>
-<main class="board" id="top">
+<main class="board" id="resume" tabindex="-1">
 {sheets}
 </main>
 <footer class="colophon">
@@ -449,6 +450,39 @@ def make_docx_txt(T):
     head("KEYWORDS"); para(T["ats_line"], size=9)
     d.save(ROOT / "Patrick_Padgett_Resume.docx")
 
+def make_og_page(T):
+    """Identity-led share card source: name at display size, headline, one outcome, DETAIL A, border + zone band. Rendered to 1200x630 by render.js."""
+    c = T["contact"]
+    (ROOT / ".og.html").write_text(f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><link rel="stylesheet" href="styles.css">
+<style>
+html,body{{margin:0;background:{PAPER};width:1200px;height:630px;overflow:hidden}}
+.og{{position:relative;width:1200px;height:630px;background:{PAPER};font-family:"D-DIN",sans-serif;color:{INK}}}
+.og .frame{{position:absolute;inset:34px;border:5px solid {INK}}}
+.og .trim{{position:absolute;inset:14px;border:1px solid {INK}}}
+.og .tick{{position:absolute;background:{INK}}}
+.og .z{{position:absolute;font:700 13px/1 "D-DIN",sans-serif}}
+.og .col{{position:absolute;left:92px;top:110px;width:700px}}
+.og .name{{font:700 88px/0.95 "D-DIN Exp","D-DIN",sans-serif;text-transform:uppercase;letter-spacing:.01em}}
+.og .hl{{margin-top:22px;font:700 28px/1.2 "D-DIN",sans-serif}}
+.og .proof{{margin-top:16px;font:400 24px/1.38 "D-DIN",sans-serif}}
+.og .proof b{{color:{RED};font-weight:700}}
+.og .url{{position:absolute;left:92px;bottom:66px;font:700 24px/1 "D-DIN",sans-serif;letter-spacing:.12em;color:{RED}}}
+.og .det{{position:absolute;right:92px;top:96px;width:300px;text-align:center}}
+.og .det .ph{{width:300px;height:300px;border-radius:50%;border:5px solid {INK};background:url(assets/headshot.jpg) center/cover;box-sizing:border-box}}
+.og .det .cap{{margin-top:18px;font:700 18px/1 "D-DIN",sans-serif;letter-spacing:.14em}}
+.og .det .cap small{{display:block;margin-top:8px;font:400 14px/1 "D-DIN",sans-serif;letter-spacing:.14em}}
+.og .rule{{margin-top:16px;width:660px;height:3px;background:{INK}}}
+</style></head><body><div class="og">
+<div class="trim"></div><div class="frame"></div>
+<span class="z" style="left:50%;top:18px;transform:translateX(-50%)">2</span><span class="z" style="left:22px;top:50%;transform:translateY(-50%)">A</span><span class="z" style="right:22px;top:50%;transform:translateY(-50%)">A</span><span class="z" style="left:50%;bottom:16px;transform:translateX(-50%)">2</span>
+<div class="col"><div class="name">{esc(T["name"].split()[0])}<br>{esc(T["name"].split()[-1])}</div>
+<div class="rule"></div>
+<div class="hl">{esc(T["headline"]).replace(" | ", "<br>")}</div>
+<div class="proof">Saved <b>$2M</b> a year with an EDR routing application; raised mediation throughput <b>250%</b>; cut alarm MTTR <b>50%</b>; led a <b>$50M</b>, 130-switch platform replacement.</div></div>
+<div class="url">RESUME.PATPADGETT.COM</div>
+<div class="det"><div class="ph" role="img" aria-label="Patrick Padgett"></div><div class="cap">DETAIL A<small>SCALE NTS</small></div></div>
+</div></body></html>""")
+
 def make_site_files():
     today = datetime.date.today().isoformat()
     (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
@@ -470,7 +504,7 @@ def make_site_files():
 def main():
     no_pdf = "--no-pdf" in sys.argv
     R = bfm.parse(MASTER.read_text()); T = select(R)
-    make_assets(T); make_docx_txt(T); make_site_files()
+    make_assets(T); make_docx_txt(T); make_site_files(); make_og_page(T)
     blocks = body_blocks(T)
     flow_html = page_html(T, blocks)
     ascii_check(re.sub(r"<[^>]+>", "", flow_html).replace("&middot;", ""))
@@ -493,15 +527,16 @@ def main():
     os.remove(ROOT / ".paginated.json")
     from PIL import Image
     og = ROOT / "assets" / "og-card.png"
-    Image.open(og).convert("RGB").save(ROOT / "assets" / "og-card.jpg", quality=82, optimize=True,
-        comment=b"Origin: screenshot of sheet 1 of index.html rendered by render.js (Playwright/Chromium) at 1200x630, JPEG q82; no generative imagery.")
-    os.remove(og)
+    im = Image.open(og).convert("RGB"); assert im.size == (1200, 630), f"og card is {im.size}, meta says 1200x630"
+    im.save(ROOT / "assets" / "og-card.jpg", quality=84, optimize=True,
+        comment=b"Origin: composed share card (.og.html: name, headline, outcomes, DETAIL A) rendered by render.js (Playwright/Chromium) at 1200x630, JPEG q84; no generative imagery.")
+    os.remove(og); (ROOT / ".og.html").unlink(missing_ok=True)
     embed_provenance()
 
 IMPECCABLE = Path("/data/pat/.hermes/skills/creative/impeccable/scripts/impeccable")
 PROVENANCE = {
     "assets/headshot.jpg": "Origin: Patrick Padgett's own headshot (career/resume/resume-ats/final-noc/assets/avatar@2x.jpg, supplied by the owner 2026-09), converted to grayscale with autocontrast by build.py make_assets(); no generative imagery.",
-    "assets/og-card.jpg": "Origin: screenshot of sheet 1 of index.html rendered by render.js (Playwright/Chromium) at 1200x630, JPEG q82; no generative imagery.",
+    "assets/og-card.jpg": "Origin: composed share card (.og.html: name, headline, outcomes, DETAIL A portrait) rendered by render.js (Playwright/Chromium) at 1200x630, JPEG q84; no generative imagery.",
     "assets/icon-512.png": "Origin: drawn by build.py mark(): D-DIN Exp Bold 'PP' in a pen-weight circle (PIL), 512px; no generative imagery.",
     "assets/apple-touch-icon.png": "Origin: drawn by build.py mark(): D-DIN Exp Bold 'PP' in a pen-weight circle (PIL), 180px; no generative imagery.",
 }

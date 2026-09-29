@@ -9,7 +9,7 @@ Telecom billing mediation and revenue assurance engineer: 14 years as Sprint's h
 ## KEY ACHIEVEMENTS
 - Saved $2 million annually by designing and leading development of an automated Event Data Record (EDR) routing application that collected switch usage records and distributed them to rating, billing, fraud and analytics systems (Sprint).
 - Increased billing mediation throughput 250% by re-architecting record processing across parallel processors (Sprint).
-- Cut alarm mean-time-to-resolution 50% by building observability and alerting on the ELK stack across multiple mediation platforms (Sprint).
+- Cut alarm mean-time-to-resolution 50% by building observability and alerting on the ELK Stack across multiple mediation platforms (Sprint).
 - Led the $50M replacement of Sprint's legacy billing mediation system (Marconi CEOS) with Openet FusionWorks across 130 switches - requirements, RFP, 12-vendor evaluation and selection.
 
 ## PROFESSIONAL EXPERIENCE
@@ -31,8 +31,8 @@ Sabbatical, U.S. travel and independent study of DevOps practices and Infrastruc
 
 RAYMOND JAMES | St. Petersburg, FL
 System Administrator (Contract), Capital Markets | Feb 2017 - May 2017
-- Anchored Linux SME and tier-3 application administration for the Capital Markets team's GBST Syn back-office trade-processing suite in a highly regulated financial environment.
-- Cut release deployment times 50% with Ansible playbooks and Jenkins pipelines that automate releases across test and production environments with consistent configuration.
+- Anchored Linux SME and Tier III application administration for the Capital Markets team's GBST Syn back-office trade-processing suite in a highly regulated financial environment.
+- Cut release deployment times 50% with Ansible playbooks and Jenkins pipelines that automated releases across test and production environments with consistent configuration.
 
 CODESIGNED | Atlanta, GA (Remote)
 Product Manager & Software Engineer | Nov 2015 - Sep 2016
@@ -55,12 +55,12 @@ Ran Unix systems and networks serving 3,000 subscribers for six dial-up-era ISPs
 
 ## TECHNICAL SKILLS
 Telecom billing / mediation: billing mediation, revenue assurance, CDR/EDR/AMA usage-record pipelines, rating and charging, Nortel / Ericsson / Lucent switch data formats, BSS/OSS, mediation rules, data reconciliation, Tier III production support, root cause analysis, ETL, Oracle SQL
-Unix / Linux / OS: RHEL, CentOS, Debian, Ubuntu, HP/UX, Solaris, FreeBSD, Red Hat Satellite, Windows Server
+Unix / Linux / OS: RHEL, CentOS, Debian, Ubuntu, HP-UX, Solaris, FreeBSD, Red Hat Satellite, Windows Server
 IaC & configuration management: Terraform, Ansible (playbooks, roles, YAML, Jinja2), CloudFormation, Puppet, Chef
 CI/CD & version control: Azure DevOps, GitHub Actions, GitLab CI/CD, Jenkins, Octopus Deploy, Git, pull-request code review and branching/tagging strategy; canary / A-B / blue-green deployment
 Cloud, containers & virtualization: AWS (EC2, S3, RDS, VPC), Microsoft Azure (VMs, Storage, Virtual Networking, Azure DevOps), Google Cloud Platform, hybrid cloud, Docker, Kubernetes, microservices, KVM, VMware ESX/vCenter/Horizon
 Monitoring & observability: ELK Stack (Elasticsearch, Logstash, Kibana), Splunk, Dynatrace, Prometheus, Grafana, centralized logging, alerting and dashboards, SLOs/SLIs, on-call incident response, postmortems and root cause analysis (RCA), SRE practices
-Programming & scripting: Python, Perl, PHP, Ruby, C / C++ / C#, Java, JavaScript / TypeScript, SQL, bash / korn / zsh, PowerShell; Ruby on Rails, Django, .NET Core, REST API design; Oracle, MySQL, PostgreSQL
+Programming & scripting: Python, Perl, PHP, Ruby, C / C++ / C#, Java, JavaScript / TypeScript, SQL, bash / ksh / zsh, PowerShell; Ruby on Rails, Django, .NET Core, REST API design; Oracle, MySQL, PostgreSQL
 Operations & ITSM: on-call and Tier 2/3 escalation, troubleshooting, release and change management, capacity planning, backup and disaster recovery, SOPs and runbooks, vendor management, ITIL, SDLC (Agile, Scrum, Waterfall), Jira Service Management, Confluence
 
 ## PROJECTS
@@ -69,7 +69,7 @@ Tunnels OpenSSH through HTTP/HTTPS proxies; 194 GitHub stars, 36 forks, GPL-2.0.
 
 ## EDUCATION AND PROFESSIONAL DEVELOPMENT
 Lake Career & Technical Center - Camdenton, Missouri | Certificate, Graphic Arts
-- Self-directed study in DevOps practices and Infrastructure as Code (2017-2018) leading directly to the Jabil Senior Infrastructure Automation Engineer role.
+- Self-directed study in DevOps practices and Infrastructure as Code (2017 - 2018) leading directly to the Jabil Senior Infrastructure Automation Engineer role.
 
 ## KEYWORDS
 Linux, Unix, RHEL, Ansible, Terraform, Docker, Kubernetes, AWS, Azure, GCP, CI/CD, Azure DevOps, Jenkins, GitLab CI, GitHub Actions, Python, Perl, Bash, PowerShell, C, C#, .NET, ELK, Splunk, Dynatrace, Prometheus, Grafana, Oracle, SQL, Billing Mediation, Mediation Rules, CDR, EDR, AMA, Rating, Charging, Data Reconciliation, BSS/OSS, Revenue Assurance, Telecom, Tier III Support, Incident Response, Root Cause Analysis, ITIL, SRE, Infrastructure as Code, Site-to-Site VPN, RADIUS, Order-to-Cash, Quote-to-Cash, Microservices, ServiceNow, Jira

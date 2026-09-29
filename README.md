@@ -12,7 +12,7 @@ Patrick Padgett's generic resume, drawn as an engineering drawing sheet. Live at
 | `Patrick_Padgett_Resume.docx` / `.txt` / `.md` | ATS twins generated from the same selection (Calibri, single column, no photo, KEYWORDS line). |
 | `assets/headshot.jpg` | Patrick's headshot, grayscale for the two-ink sheet. Source: `career/resume/resume-ats/final-noc/assets/avatar@2x.jpg`. |
 | `assets/fonts/` | D-DIN 400/700/Italic + D-DIN Exp 700 (woff2). SIL OFL 1.1, Datto Inc. Licence in `D-DIN-OFL.txt`. |
-| `assets/og-card.jpg`, `icon.svg`, `icon-512.png`, `apple-touch-icon.png`, `favicon.ico` | Share card (sheet 1 header) and the PP detail-circle mark. |
+| `assets/og-card.jpg`, `icon.svg`, `icon-512.png`, `apple-touch-icon.png`, `favicon.ico` | Share card (composed 1200x630 from `.og.html`: name, headline, outcomes, DETAIL A) and the PP detail-circle mark. |
 | `robots.txt`, `sitemap.xml`, `404.html`, `CNAME` | Pages plumbing. |
 | `PRODUCT.md`, `DESIGN.md`, `.impeccable/` | Impeccable product truth, the recorded visual world, surface brief, review captures. |
 
@@ -58,6 +58,7 @@ Anti-reference (earlier Padgett resume builds, all different worlds): NOC page (
 - Mobile 390 and 320: 0px horizontal overflow. Print emulation: 2 pages, toolbar and colophon hidden.
 - Two vision inspection rounds fixed: header grouping, rule rhythm, zone band geometry from the border box, title block cell collision, notes alignment, figure splitting across lines.
 - Finish review and documentation: see the commit message and `DESIGN.md`.
+- Critique rounds (`.impeccable/critique/`): 23/32 -> 23/32 (round 2 widened to print, zoom, landscape, share card, keyboard, PDF pages, proofread); all five round-2 issues fixed in the following commit.
 
 ## Before this goes live (owner)
 

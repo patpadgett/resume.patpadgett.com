@@ -98,11 +98,11 @@ const PDF = 'Patrick_Padgett_Resume.pdf';
     await page2.addStyleTag({ content: '.sheet{animation:none !important}' });
     await (await page2.$('.sheet[data-sheet="1"]')).screenshot({ path: path.join(rev, 'sheet1@2x.png') });
     await (await page2.$('.sheet[data-sheet="2"]')).screenshot({ path: path.join(rev, 'sheet2@2x.png') });
-    // og card 1200x630: sheet 1 zoomed to the card width, top of the sheet
-    await page2.setViewportSize({ width: 1200, height: 630 });
-    await page2.addStyleTag({ content: '.bar,.colophon{display:none} .board{padding:0} .sheet{margin:0 auto; zoom:1.4706; box-shadow:none}' });
-    await page2.waitForTimeout(100);
-    await page2.screenshot({ path: path.join(ROOT, 'assets', 'og-card.png'), clip: { x: 0, y: 0, width: 1200, height: 630 } });
+    // og card 1200x630 from the composed .og.html at 1x
+    const og = await browser.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 });
+    await og.goto('file://' + path.join(ROOT, '.og.html')); await og.evaluate(() => document.fonts.ready); await og.waitForTimeout(200);
+    await og.screenshot({ path: path.join(ROOT, 'assets', 'og-card.png'), clip: { x: 0, y: 0, width: 1200, height: 630 } });
+    await og.close();
     await page2.close();
     // mobile
     await page.setViewportSize({ width: 390, height: 844 });
