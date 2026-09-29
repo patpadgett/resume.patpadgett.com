@@ -1,0 +1,8 @@
+.impeccable/review/
+.impeccable/critique/
+.build.json
+.prov.txt
+.paginated.json
+node_modules/
+*.log
+.DS_Store

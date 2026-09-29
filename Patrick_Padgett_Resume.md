@@ -1,0 +1,75 @@
+# Patrick Padgett
+Telecom Billing Mediation Engineer | DevOps and Infrastructure Automation
++1 816-601-5983 | pat@patpadgett.com | Greater Tampa Bay, FL - open to remote or hybrid
+linkedin.com/in/patpadgett | github.com/patpadgett | patpadgett.com
+
+## PROFESSIONAL SUMMARY
+Telecom billing mediation and revenue assurance engineer: 14 years as Sprint's highest-tier SME for wireless and wireline mediation (Nortel, Ericsson, Lucent AMA/CDR data), then senior infrastructure automation at Jabil and Raymond James. Saved $2M with an EDR routing application, raised mediation throughput 250%, cut alarm MTTR 50%, and led a $50M, 130-switch platform replacement. 25 years of production Linux with Ansible, Terraform, Docker, Kubernetes, CI/CD and ELK; fluent in Python, Perl, C and shell.
+
+## KEY ACHIEVEMENTS
+- Saved $2 million annually by designing and leading development of an automated Event Data Record (EDR) routing application that collected switch usage records and distributed them to rating, billing, fraud and analytics systems (Sprint).
+- Increased billing mediation throughput 250% by re-architecting record processing across parallel processors (Sprint).
+- Cut alarm mean-time-to-resolution 50% by building observability and alerting on the ELK stack across multiple mediation platforms (Sprint).
+- Led the $50M replacement of Sprint's legacy billing mediation system (Marconi CEOS) with Openet FusionWorks across 130 switches - requirements, RFP, 12-vendor evaluation and selection.
+
+## TECHNICAL SKILLS
+Telecom billing / mediation: billing mediation, revenue assurance, CDR/EDR/AMA usage-record pipelines, rating and charging, Nortel / Ericsson / Lucent switch data formats, BSS/OSS, mediation rules, data reconciliation, Tier III production support, root cause analysis, ETL, Oracle SQL
+Unix / Linux / OS: RHEL, CentOS, Debian, Ubuntu, HP/UX, Solaris, FreeBSD, Red Hat Satellite, Windows Server, Active Directory / IAM
+IaC & configuration management: Terraform, Ansible (playbooks, roles, YAML, Jinja2), CloudFormation, Puppet, Chef, Salt
+CI/CD & version control: Azure DevOps, GitHub Actions, GitLab CI/CD, Jenkins, Octopus Deploy, Git, pull-request code review and branching/tagging strategy; canary / A-B / blue-green deployment
+Cloud, containers & virtualization: AWS (EC2, S3, RDS, VPC), Microsoft Azure (VMs, Storage, Virtual Networking, Azure DevOps), Google Cloud Platform, hybrid cloud, Docker, Kubernetes, microservices, KVM, VMware ESX/vCenter/Horizon
+Monitoring & observability: ELK Stack (Elasticsearch, Logstash, Kibana), Splunk, Dynatrace, Prometheus, Grafana, centralized logging, alerting and dashboards, SLOs/SLIs, on-call incident response, postmortems and root cause analysis (RCA), SRE practices
+Programming & scripting: Python, Perl, PHP, Ruby, C / C++ / C#, Java, JavaScript / TypeScript, SQL, bash / korn / zsh, PowerShell; Ruby on Rails, Django, .NET Core, REST API design; Oracle, MySQL, PostgreSQL
+Operations & ITSM: on-call and Tier 2/3 escalation, troubleshooting, release and change management, capacity planning, backup and disaster recovery, SOPs and runbooks, vendor management, ITIL, SDLC (Agile, Scrum, Waterfall), Jira Service Management, Confluence
+
+## PROFESSIONAL EXPERIENCE
+VIMOPS | Kansas City, MO (Remote)
+Founder & CEO / DevOps Engineer | May 2020 - Present
+- Founded and run an IT services firm serving 30+ client organizations with custom software (Python, PHP), web development and digital marketing for small businesses and federal contracts (registered vendor, CAGE 8PMQ9).
+- Cut client deployment times 70% by automating infrastructure with Ansible, Terraform, Docker and CI/CD (GitLab CI, GitHub Actions) across AWS, Azure and GCP, improving multi-cloud reliability.
+- Reduced deployment-related service disruptions 90% by refactoring a client's legacy monolith into containerized microservices.
+
+Sabbatical, international travel (Indonesia, Malaysia, Vietnam, Cambodia; conversational Bahasa Indonesia) | May 2019 - Feb 2020
+
+JABIL | St. Petersburg, FL
+Senior Infrastructure Automation Engineer | Mar 2018 - May 2019
+- Reduced deployment time for critical iFactory infrastructure by 50% by building CI/CD build and release pipelines in Azure DevOps and Octopus Deploy with automated testing gates.
+- Cut new-developer onboarding time 30% by containerizing all iFactory applications with Docker - breaking siloed apps into microservices - and deploying them on Kubernetes across approx. 112 manufacturing plants.
+- Reduced manual configuration time 70% with a comprehensive Ansible playbook library for deploying, configuring and maintaining on-premises and cloud resources.
+
+Sabbatical, U.S. travel and independent study of DevOps practices and Infrastructure as Code | May 2017 - Mar 2018
+
+RAYMOND JAMES | St. Petersburg, FL
+System Administrator (Contract), Capital Markets | Feb 2017 - May 2017
+- Anchored Linux SME and tier-3 application administration for the Capital Markets team's GBST Syn back-office trade-processing suite in a highly regulated financial environment.
+- Cut release deployment times 50% with Ansible playbooks and Jenkins pipelines that automate releases across test and production environments with consistent configuration.
+
+CODESIGNED | Atlanta, GA (Remote)
+Product Manager & Software Engineer | Nov 2015 - Sep 2016
+- Drove 30% growth in user adoption across 50+ enterprise clients by leading development and product management of codesigned's Microsoft SharePoint products "Intranet" and "Analytics" (.NET/C#).
+
+SPRINT (now T-Mobile) | Overland Park, KS
+Software Engineer, Accounting Operations / Billing Mediation | Jul 2001 - Mar 2015
+- Anchored Tier III support, root cause analysis and on-call escalation for 14 years across every Sprint billing mediation platform, resolving critical issues with a 98% success rate and reducing service downtime 20%.
+- Ran the Unix/Linux mediation pipelines that collected, parsed, validated, transformed, enriched and routed millions of wireless and wireline CDR/EDR records daily from Nortel, Ericsson and Lucent network elements to charging, billing and downstream systems.
+- Recovered tens of millions of dollars in otherwise-lost revenue over 14 years by reconciling network elements, mediation and billing end to end and repairing corrupted CDR files that would have gone unbilled.
+- Sustained 99.999% uptime (about 5 minutes/year) for 14 years across the 50-server bare-metal and virtualized RHEL/CentOS/Ubuntu mediation estate through disciplined patching, vulnerability scanning, hardware selection and vendor acceptance testing.
+
+CYBERRAZOR LLC | Prairie Village, KS
+Founder (part-time, concurrent with Sprint) | Jan 2005 - Dec 2009
+Built Fasttrack, a Ruby on Rails celeration-charting web app for behavior analysts at schools serving students with autism; trained 30+ educators, improving student progress tracking 20%.
+
+Various ISPs and Consultancies | Missouri / Kansas
+Systems Administrator and Network Engineer | 1996 - 2001
+Ran Unix systems and networks serving 3,000 subscribers for six dial-up-era ISPs and consultancies; shipped first commercial software at 13.
+
+## PROJECTS
+corkscrew | Creator and Maintainer | C, GNU Autotools, GitHub Actions | 2000 - Present | github.com/patpadgett/corkscrew
+Tunnels OpenSSH through HTTP/HTTPS proxies; 194 GitHub stars, 36 forks, GPL-2.0. Packaged in Debian, Ubuntu, Red Hat, CentOS, FreeBSD and Cygwin; reviewed in Linux Magazine (Issue 166, 2014) and 2600: The Hacker Quarterly, demonstrated in books and YouTube videos, and has its own Wikipedia article.
+
+## EDUCATION AND PROFESSIONAL DEVELOPMENT
+Lake Career & Technical Center - Camdenton, Missouri | Certificate, Graphic Arts
+- Self-directed study in DevOps practices and Infrastructure as Code (2017-2018) leading directly to the Jabil Senior Infrastructure Automation Engineer role.
+
+## KEYWORDS
+Linux, Unix, RHEL, Ansible, Terraform, Docker, Kubernetes, AWS, Azure, GCP, CI/CD, Azure DevOps, Jenkins, GitLab CI, GitHub Actions, Python, Perl, Bash, PowerShell, C, C#, .NET, ELK, Splunk, Dynatrace, Prometheus, Grafana, Oracle, SQL, Billing Mediation, Mediation Rules, CDR, EDR, AMA, Rating, Charging, Data Reconciliation, BSS/OSS, Revenue Assurance, Telecom, Tier III Support, Incident Response, Root Cause Analysis, ITIL, SRE, Infrastructure as Code, Site-to-Site VPN, RADIUS, Order-to-Cash, Quote-to-Cash, Microservices, ServiceNow, Jira

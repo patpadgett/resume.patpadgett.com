@@ -1,0 +1,216 @@
+/* resume.patpadgett.com - the resume as an engineering drawing sheet.
+   Two inks on bond: drafting black and redline red. One family: D-DIN (OFL).
+   Print truth lives in pt; the screen shows the same sheets on a drafting board. */
+
+@font-face { font-family: "D-DIN"; src: url("assets/fonts/D-DIN.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "D-DIN"; src: url("assets/fonts/D-DIN-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "D-DIN"; src: url("assets/fonts/D-DIN-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "D-DIN Exp"; src: url("assets/fonts/D-DINExp-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+
+:root {
+  --ink: #141414;
+  --red: #C8102E;
+  --paper: #FFFFFF;
+  --board: #C4CFC1;          /* pale drafting-board vinyl */
+  --board-deep: #A9B7A6;
+  --hair: 0.5pt;             /* ISO 0.18 mm pen */
+  --med: 1pt;                /* 0.35 mm */
+  --heavy: 2pt;              /* 0.7 mm */
+  --fs: 9.4pt;
+  --lh: 11.2pt;
+  --sheet-pad-x: 0.6in;
+  --sheet-pad-top: 0.55in;
+  --sheet-pad-bottom: 0.35in;   /* the foot rests on the border line */
+  --border-inset: 0.35in;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--board);
+  color: var(--ink);
+  font-family: "D-DIN", "DIN Alternate", "Bahnschrift", "Liberation Sans", Arial, sans-serif;
+  font-size: var(--fs);
+  line-height: var(--lh);
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "dlig" 0, "kern" 1;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+::selection { background: var(--red); color: var(--paper); }
+a { color: var(--red); text-decoration: underline; text-decoration-thickness: var(--hair); text-underline-offset: 2.6pt; text-decoration-skip-ink: all; }
+a:hover { text-decoration-thickness: var(--med); }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; border-radius: 1px; }
+
+/* ---------------------------------------------------------------- toolbar (screen only) */
+.bar {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 12px 20px;
+  background: color-mix(in srgb, var(--board) 88%, transparent);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--board-deep);
+}
+.bar-name { color: var(--ink); text-decoration: none; font: 700 13px/1 "D-DIN Exp", "D-DIN", sans-serif; letter-spacing: 0.06em; white-space: nowrap; }
+.bar-name span { font-family: "D-DIN", sans-serif; font-weight: 400; letter-spacing: 0.14em; margin-left: 8px; }
+.bar-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.btn {
+  display: inline-block; padding: 8px 12px; border: 1px solid var(--ink); background: var(--paper); color: var(--ink);
+  font: 600 11.5px/1 "D-DIN", sans-serif; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; cursor: pointer;
+  transition: color 140ms ease-out, border-color 140ms ease-out, background-color 140ms ease-out;
+}
+.btn:hover { color: var(--red); border-color: var(--red); text-decoration: none; }
+.btn-ink { background: var(--ink); color: var(--paper); }
+.btn-ink:hover { background: var(--red); border-color: var(--red); color: var(--paper); }
+
+/* ---------------------------------------------------------------- board + sheets */
+.board { padding: 36px 16px 12px; }
+.sheet {
+  position: relative;
+  width: 8.5in; height: 11in;
+  margin: 0 auto 32px;
+  padding: var(--sheet-pad-top) var(--sheet-pad-x) var(--sheet-pad-bottom);
+  background: var(--paper);
+  display: flex; flex-direction: column;
+  box-shadow: 0 1px 2px rgba(20, 20, 20, 0.18), 0 22px 44px -18px rgba(20, 20, 20, 0.45);
+  overflow: hidden;
+}
+.sheet::before {
+  content: ""; position: absolute; inset: var(--border-inset);
+  border: var(--heavy) solid var(--ink); pointer-events: none;
+}
+.zone { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+
+.flow { flex: 1 1 auto; min-height: 0; overflow: hidden; }
+.sheet.measure { height: auto; }
+.sheet.measure .flow { overflow: visible; }
+
+.foot {
+  flex: 0 0 auto;
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 12pt;
+  margin: 8pt calc(-1 * (var(--sheet-pad-x) - var(--border-inset))) 0;   /* stretch to the border line */
+  padding: 0;
+}
+.foot .tb { margin-right: 0; margin-bottom: 0; }
+.foot .nb { margin-left: calc(var(--sheet-pad-x) - var(--border-inset)); margin-bottom: 0; }
+.tb, .nb { display: block; flex: 0 0 auto; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .sheet { animation: settle 520ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .sheet[data-sheet="2"] { animation-delay: 90ms; }
+  @keyframes settle {
+    from { transform: translateY(8px); box-shadow: 0 1px 2px rgba(20,20,20,0.10), 0 34px 60px -18px rgba(20,20,20,0.55); }
+    to   { transform: translateY(0);   box-shadow: 0 1px 2px rgba(20,20,20,0.18), 0 22px 44px -18px rgba(20,20,20,0.45); }
+  }
+}
+
+/* ---------------------------------------------------------------- the resume text layer */
+.head { display: flex; justify-content: space-between; align-items: flex-start; gap: 20pt; padding-bottom: 5pt; border-bottom: var(--heavy) solid var(--ink); }
+.head-text { flex: 1 1 auto; min-width: 0; }
+.head .detail { flex: 0 0 auto; margin: 0 2pt 0 0; }
+.detail svg { display: block; }
+
+h1 {
+  margin: 0 0 5pt;
+  font: 700 26pt/1 "D-DIN Exp", "D-DIN", sans-serif;
+  letter-spacing: 0; text-transform: uppercase;
+}
+.headline { margin: 0 0 5pt; font-weight: 700; font-size: 9.6pt; line-height: 12pt; }
+.contact { margin: 0; font-size: 9pt; line-height: 12.5pt; }
+
+.flow h2 {
+  display: block;
+  margin: 12pt 0 5.5pt;
+  padding-bottom: 3pt;
+  border-bottom: var(--med) solid var(--ink);
+  font-size: 8.6pt; line-height: 10pt; font-weight: 700; letter-spacing: 0; word-spacing: 0.18em;
+}
+.flow .head + h2 { margin-top: 9pt; }
+.flow ul.cont { margin-top: 0; }
+
+.flow p { margin: 0 0 2.5pt; }
+.summary { max-width: 100%; }
+.flow ul { margin: 0 0 1pt; padding: 0 0 0 11pt; list-style: disc; }
+li { margin: 0 0 1.8pt; padding-left: 1pt; }
+li::marker { color: var(--ink); font-size: 0.9em; }
+ul.skills { list-style: none; padding-left: 0; }
+ul.skills li { margin-bottom: 3pt; padding-left: 0; }
+ul.skills b { font-weight: 700; }
+
+.flow .job { margin-top: 7pt; }
+.flow .job:first-child { margin-top: 0; }
+h3 { margin: 0; font-size: 9.6pt; line-height: 12pt; font-weight: 700; text-transform: uppercase; }
+h3 .loc { font-weight: 400; text-transform: none; }
+.title { margin: 0 0 2pt; font-weight: 700; font-size: 9.2pt; }
+.title .dates { font-weight: 400; }
+ul.exp { margin-bottom: 1pt; }
+.flow .sabb { margin: 7pt 0 0; font-style: italic; }
+.flow .oneline { margin: 0 0 1pt; }
+.flow .proj { margin-bottom: 1.5pt; }
+.proj b { font-weight: 700; }
+.fig { color: var(--red); font-weight: 700; white-space: nowrap; }
+.fig.wrap { white-space: normal; }
+
+/* ---------------------------------------------------------------- colophon */
+.colophon { max-width: 8.5in; margin: 0 auto; padding: 4px 0 40px; font-size: 12px; line-height: 18px; color: var(--ink); }
+.colophon p { margin: 0 0 4px; }
+.colophon a { color: var(--ink); }
+.colophon a:hover { color: var(--red); }
+
+/* ---------------------------------------------------------------- 404 */
+.p404 .sheet-404 { height: auto; min-height: 6in; justify-content: center; }
+.p404 h1 { font-size: 22pt; }
+.p404 p { font-size: 11pt; line-height: 15pt; margin: 6pt 0; }
+.p404 .btn { margin-right: 8px; }
+
+/* ---------------------------------------------------------------- fluid sheets below the paper width */
+@media screen and (max-width: 900px) {
+  .board { padding: 20px 10px 8px; }
+  .sheet { width: auto; height: auto; margin: 0 0 20px; padding: 40px 28px 14px; }
+  .sheet::before { inset: 14px; border-width: 2px; }
+  .foot { margin: 16px -14px 0; align-items: flex-start; }
+  .foot .nb { width: calc(100% - 28px); margin: 0 14px; } .foot .tb { width: 100%; margin: 0; }
+  .head { padding-bottom: 10px; }
+  .zone { display: none; }
+  .flow { overflow: visible; }
+  .foot { flex-direction: column; align-items: stretch; gap: 10px; }
+  .tb, .nb { width: 100%; max-width: none; height: auto; }
+  .colophon { padding: 4px 10px 40px; }
+}
+@media screen and (max-width: 700px) {
+  :root { --fs: 15px; --lh: 22px; }
+  .bar { padding: 10px 12px; }
+  .bar-name { display: none; }
+  .bar-actions { justify-content: center; width: 100%; }
+  .head { flex-direction: column-reverse; gap: 14px; }
+  .head .detail { margin: 0; width: 150px; }
+  .detail svg { width: 100%; height: auto; }
+  h1 { font-size: clamp(22px, 6.8vw, 34px); }
+  .headline { font-size: 15px; line-height: 20px; }
+  .contact { font-size: 14px; line-height: 21px; }
+  .flow h2 { font-size: 12px; line-height: 16px; margin: 22px 0 8px; padding-bottom: 4px; }
+  .flow .head + h2 { margin-top: 18px; }
+  h3 { font-size: 15px; line-height: 21px; }
+  .title { font-size: 14px; }
+  .flow .job { margin-top: 12px; }
+  .flow p { margin-bottom: 4px; }
+  li { margin-bottom: 4px; }
+  .flow ul { padding-left: 16px; margin-bottom: 2px; }
+  ul.skills li { margin-bottom: 6px; }
+  .flow .sabb { margin: 12px 0 0; }
+  .colophon { font-size: 13px; line-height: 20px; padding: 4px 12px 40px; }
+  .contact { word-break: break-word; }
+}
+
+/* ---------------------------------------------------------------- print: the sheet IS the page */
+@page { size: 8.5in 11in; margin: 0; }
+@media print {
+  html, body { background: var(--paper) !important; }
+  .bar, .colophon { display: none !important; }
+  .board { padding: 0; }
+  .sheet { width: 8.5in; height: 11in; margin: 0; box-shadow: none; animation: none; break-after: page; page-break-after: always; break-inside: avoid; }
+  .sheet:last-of-type { break-after: auto; page-break-after: auto; }
+  a { color: var(--red); }
+  .btn { display: none; }
+}
