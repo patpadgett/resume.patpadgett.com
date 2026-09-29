@@ -31,7 +31,7 @@ const PDF = 'Patrick_Padgett_Resume.pdf';
         if (el.tagName === 'UL') {
           for (const li of el.children) atoms.push({ el: li, kind: 'li', ul: el });
         } else {
-          const k = el.classList.contains('job') ? 'job' : el.classList.contains('proj') ? 'proj' : el.tagName.toLowerCase();
+          const k = el.classList.contains('job') ? 'job' : el.classList.contains('proj') ? 'proj' : el.classList.contains('edu') ? 'edu' : el.tagName.toLowerCase();
           atoms.push({ el, kind: k });
         }
       }

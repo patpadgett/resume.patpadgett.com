@@ -128,6 +128,8 @@ components:
     typography: "{typography.section}"
   figure:
     textColor: "{colors.red}"
+  figure-scale:
+    textColor: "{colors.ink}"
   title-block:
     width: "282pt"
     height: "60pt"
@@ -193,13 +195,14 @@ Ligatures are disabled (`font-variant-ligatures: none`; `"liga" 0, "dlig" 0, "ke
 ### Sheet and page
 - Wide-screen sheet: fixed US Letter, centered, flex column, with 32px between sheets. Its size and padding are frontmatter tokens. The board uses 36px 16px 12px padding.
 - Outer trim: 0.16in from the paper edge; heavy inner border at the border-inset token. Four cells per edge, numbered 1–4 top/bottom and lettered A–D left/right. The zone SVG uses a 612 × 792 coordinate space.
-- Content is one column. Header is a horizontal flex row with a 20pt gap; portrait sits to the right. The header closes with the heavy (2pt) pen rule, 5pt below the contact lines; the first section heading follows 9pt later. The growing body region has hidden overflow on fixed sheets, so added content requires real pagination checks, not just a fixed height.
+- Content is one column: header, PROFESSIONAL SUMMARY, KEY ACHIEVEMENTS, PROFESSIONAL EXPERIENCE (sheet 1 into sheet 2), TECHNICAL SKILLS, PROJECTS, EDUCATION AND PROFESSIONAL DEVELOPMENT. The current role's evidence lands on sheet 1; the skills inventory follows the chronology. Header is a horizontal flex row with a 20pt gap; portrait sits to the right. The header closes with the heavy (2pt) pen rule, 5pt below the contact lines; the first section heading follows 9pt later.
+- Contact lines are `<span>` items in a flex row separated by CSS hairline bars (`span + span::before`, 0.5pt x 0.85em), never textual pipes; on phones each item is its own row with a 44px-class hit area (6px vertical padding). The growing body region has hidden overflow on fixed sheets, so added content requires real pagination checks, not just a fixed height.
 - Footer is non-growing, bottom-aligned, with a 12pt gap and 8pt top margin. Its negative horizontal margins reach the border. Title block meets the bottom-right border; notes align to the body left inset. These are separate SVG objects, not a content table.
 - Lists use disc markers, 11pt left padding, 1pt item padding and 1.8pt bottom margins. Skills remove bullets/left padding and use 3pt row spacing. Jobs use job-before spacing, with the first child exempted.
 
 ### Responsive behavior
 - **At screen widths ≤900px:** sheets become auto-width/auto-height with 40px 28px 14px padding and 20px bottom margin. Board padding becomes 20px 10px 8px. The border becomes 2px, inset 14px; zones disappear. The body overflow becomes visible. Footer SVGs stack with a 10px gap and stretch to full width with proportional height.
-- **At screen widths ≤700px:** body uses the mobile token. Toolbar name disappears, actions center, toolbar padding becomes 10px 12px. Header reverses into a column with a 14px gap; the detail view is 150px wide above the name. Name size becomes `clamp(22px, 6.8vw, 34px)`. Headline is 15px/20px, contact 14px/21px, employer 15px/21px and role title 14px. List-item bottom spacing becomes 4px; contact text may break long words.
+- **At screen widths ≤700px:** body uses the mobile token. Toolbar name disappears; the three actions become one row of equal `flex: 1` buttons, min-height 44px, with short labels (PDF / Word / Text via `.short`, long labels hidden). Header becomes a two-column grid: name (left, vertically centred) beside a 96px detail view (right, 84px at ≤320), then headline and contact rows spanning both columns. Name size `clamp(22px, 6.8vw, 34px)`. Headline 15px/20px, contact 14px/21px (13px at ≤320; URLs `word-break: keep-all`), employer 15px/21px, role title 14px. A screen-only continuation cue (`.cont`, glyph outlines) marks the top of sheet 2 at every width; it is hidden in print.
 - Mobile overrides are written at `.flow` specificity so they win: section headings 12px/16px with 22px above and 8px below, jobs 12px apart, sabbaticals 12px above, list items 4px apart, skills rows 6px apart. The notes SVG is inset 14px each side so it stays inside the 14px frame; the title block runs full width beneath it.
 
 ### Print
@@ -245,16 +248,16 @@ A flex row fixed by sticky positioning to top 0, z-index 5, with a 16px gap and 
 A compact bold label followed by a medium-pen rule, not a filled banner. Keep paragraph and list text in the same reading column. The section-heading snippet represents the actual `.flow h2` rule, including its specificity outcome on mobile.
 
 ### Redlined figure and link
-Figures add bold red emphasis without altering the text. What turns red is decided by one regex in `build.py` (`FIG`): money, percentages, multipliers, "tens of millions of dollars", and counts of things delivered or run (clients, switches, subscribers, plants, educators, stars, forks, servers, vendors, states). Calendar numbers, ages, dates and version numbers stay black. Short figures never wrap (`nowrap`); a figure of three or more words carries `.wrap`. Links use a hairline underline offset 2.6pt with `text-decoration-skip-ink: all`; hover thickens to the medium pen. These are distinct semantics: not every red number is a link.
+Two tiers, decided by two regexes in `build.py`. Tier 1 `.fig` (red 700): outcomes - money, percentages, multipliers, "tens of millions of dollars", the downtime equivalent. Tier 2 `.num` (ink 700): scale and tenure - counts of things run or delivered (clients, switches, subscribers, plants, educators, stars, forks, servers, vendors, states) and years. The PROFESSIONAL SUMMARY demotes its four repeats of the KEY ACHIEVEMENTS figures to tier 2 so the achievements own the red. Calendar numbers, ages, dates and version numbers stay plain. Short figures never wrap (`nowrap`); three-plus-word figures carry `.wrap`. Note 2 on every sheet states the legend. Links use a hairline underline offset 2.6pt with `text-decoration-skip-ink: all`; hover thickens to the medium pen. These are distinct semantics: not every red number is a link.
 
 ### Title block and notes
-Title block is a paper-filled frame with medium perimeter and hairline internal rules; horizontal dividers occur at y=22 and y=41 in its 282 × 60 coordinate space. Its top-row columns differ from the lower metadata columns. Notes occupy 232 × 60, with their horizontal rule at y=22 to match the title block. Note 2 reads "RED FIGURES ARE MEASURED RESULTS AND SCALE. RED UNDERLINED TEXT IS A LIVE LINK." so the two red semantics are distinguished on paper. Both are `aria-hidden` SVGs with glyph paths; use the generator to retain this distinction when adding another sheet type.
+Title block is a paper-filled frame with medium perimeter and hairline internal rules; REV is a letter (A for the first shipped master month, advancing per later master month) and DATE is the build date; horizontal dividers occur at y=22 and y=41 in its 282 × 60 coordinate space. Its top-row columns differ from the lower metadata columns. Notes occupy 232 × 60, with their horizontal rule at y=22 to match the title block. Note 2 reads "RED FIGURES ARE MEASURED RESULTS AND SCALE. RED UNDERLINED TEXT IS A LIVE LINK." so the two red semantics are distinguished on paper. Both are `aria-hidden` SVGs with glyph paths; use the generator to retain this distinction when adding another sheet type.
 
 ### Detail view
 The grayscale headshot is clipped to a circle of 78pt diameter with a medium outline. The complete SVG is 82pt × 103pt, with outlined `DETAIL A` and `SCALE NTS` captions below it. The first caption is 7.4pt bold with 0.10em tracking, the second 5.4pt regular with the same tracking. The built device has a caption underline, not a leader connecting to another location. The SVG carries the accessible image label; its caption paths are not resume text.
 
 ### Colophon
-Screen-only context below the sheets, maximum width matching Letter paper, 12px/18px type and 4px 0 40px padding. Phone type becomes 13px/20px. Links remain black until hover; this footer is not another printable sheet component.
+Screen-only close below the sheets, maximum width matching Letter paper. Leads with three actions in the button vocabulary (Email Patrick as `.btn-ink`, Call, Download PDF), then one 12px/18px line naming the record and LinkedIn / GitHub / patpadgett.com. Phone: buttons stack full width, type 13px/20px. Text links stay black until hover; `.colophon .btn-ink` keeps paper-white text. Not a printable sheet component.
 
 ## Do's and Don'ts
 
@@ -271,3 +274,4 @@ Screen-only context below the sheets, maximum width matching Letter paper, 12px/
 - **Don't** turn single-column reading content into title-block-style tables or decorative text paths.
 - **Don't** add a fourth pen weight or a third ink; the ramp is hair / med / heavy and the palette is ink / red on paper.
 - **Don't** add a Print action or a portrait leader; the built device is a captioned detail view and the PDF is the print path.
+- **Don't** put red on scale or tenure figures; red is spent on outcomes only, and the summary never out-reds the achievements.

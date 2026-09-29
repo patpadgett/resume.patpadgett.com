@@ -12,16 +12,6 @@ KEY ACHIEVEMENTS
 - Cut alarm mean-time-to-resolution 50% by building observability and alerting on the ELK stack across multiple mediation platforms (Sprint).
 - Led the $50M replacement of Sprint's legacy billing mediation system (Marconi CEOS) with Openet FusionWorks across 130 switches - requirements, RFP, 12-vendor evaluation and selection.
 
-TECHNICAL SKILLS
-Telecom billing / mediation: billing mediation, revenue assurance, CDR/EDR/AMA usage-record pipelines, rating and charging, Nortel / Ericsson / Lucent switch data formats, BSS/OSS, mediation rules, data reconciliation, Tier III production support, root cause analysis, ETL, Oracle SQL
-Unix / Linux / OS: RHEL, CentOS, Debian, Ubuntu, HP/UX, Solaris, FreeBSD, Red Hat Satellite, Windows Server, Active Directory / IAM
-IaC & configuration management: Terraform, Ansible (playbooks, roles, YAML, Jinja2), CloudFormation, Puppet, Chef, Salt
-CI/CD & version control: Azure DevOps, GitHub Actions, GitLab CI/CD, Jenkins, Octopus Deploy, Git, pull-request code review and branching/tagging strategy; canary / A-B / blue-green deployment
-Cloud, containers & virtualization: AWS (EC2, S3, RDS, VPC), Microsoft Azure (VMs, Storage, Virtual Networking, Azure DevOps), Google Cloud Platform, hybrid cloud, Docker, Kubernetes, microservices, KVM, VMware ESX/vCenter/Horizon
-Monitoring & observability: ELK Stack (Elasticsearch, Logstash, Kibana), Splunk, Dynatrace, Prometheus, Grafana, centralized logging, alerting and dashboards, SLOs/SLIs, on-call incident response, postmortems and root cause analysis (RCA), SRE practices
-Programming & scripting: Python, Perl, PHP, Ruby, C / C++ / C#, Java, JavaScript / TypeScript, SQL, bash / korn / zsh, PowerShell; Ruby on Rails, Django, .NET Core, REST API design; Oracle, MySQL, PostgreSQL
-Operations & ITSM: on-call and Tier 2/3 escalation, troubleshooting, release and change management, capacity planning, backup and disaster recovery, SOPs and runbooks, vendor management, ITIL, SDLC (Agile, Scrum, Waterfall), Jira Service Management, Confluence
-
 PROFESSIONAL EXPERIENCE
 VIMOPS | Kansas City, MO (Remote)
 Founder & CEO / DevOps Engineer | May 2020 - Present
@@ -61,7 +51,17 @@ Built Fasttrack, a Ruby on Rails celeration-charting web app for behavior analys
 
 Various ISPs and Consultancies | Missouri / Kansas
 Systems Administrator and Network Engineer | 1996 - 2001
-Ran Unix systems and networks serving 3,000 subscribers for six dial-up-era ISPs and consultancies; shipped first commercial software at 13.
+Ran Unix systems and networks serving 3,000 subscribers for six dial-up-era ISPs; shipped first commercial software at 13.
+
+TECHNICAL SKILLS
+Telecom billing / mediation: billing mediation, revenue assurance, CDR/EDR/AMA usage-record pipelines, rating and charging, Nortel / Ericsson / Lucent switch data formats, BSS/OSS, mediation rules, data reconciliation, Tier III production support, root cause analysis, ETL, Oracle SQL
+Unix / Linux / OS: RHEL, CentOS, Debian, Ubuntu, HP/UX, Solaris, FreeBSD, Red Hat Satellite, Windows Server
+IaC & configuration management: Terraform, Ansible (playbooks, roles, YAML, Jinja2), CloudFormation, Puppet, Chef
+CI/CD & version control: Azure DevOps, GitHub Actions, GitLab CI/CD, Jenkins, Octopus Deploy, Git, pull-request code review and branching/tagging strategy; canary / A-B / blue-green deployment
+Cloud, containers & virtualization: AWS (EC2, S3, RDS, VPC), Microsoft Azure (VMs, Storage, Virtual Networking, Azure DevOps), Google Cloud Platform, hybrid cloud, Docker, Kubernetes, microservices, KVM, VMware ESX/vCenter/Horizon
+Monitoring & observability: ELK Stack (Elasticsearch, Logstash, Kibana), Splunk, Dynatrace, Prometheus, Grafana, centralized logging, alerting and dashboards, SLOs/SLIs, on-call incident response, postmortems and root cause analysis (RCA), SRE practices
+Programming & scripting: Python, Perl, PHP, Ruby, C / C++ / C#, Java, JavaScript / TypeScript, SQL, bash / korn / zsh, PowerShell; Ruby on Rails, Django, .NET Core, REST API design; Oracle, MySQL, PostgreSQL
+Operations & ITSM: on-call and Tier 2/3 escalation, troubleshooting, release and change management, capacity planning, backup and disaster recovery, SOPs and runbooks, vendor management, ITIL, SDLC (Agile, Scrum, Waterfall), Jira Service Management, Confluence
 
 PROJECTS
 corkscrew | Creator and Maintainer | C, GNU Autotools, GitHub Actions | 2000 - Present | github.com/patpadgett/corkscrew

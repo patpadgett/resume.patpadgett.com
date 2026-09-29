@@ -32,8 +32,8 @@ PROFILE = dict(
     # TECHNICAL SKILLS: master category label -> a SUBSET of that category's master list (selection, never invention)
     skills=[
         ("Telecom billing / mediation", "billing mediation, revenue assurance, CDR/EDR/AMA usage-record pipelines, rating and charging, Nortel / Ericsson / Lucent switch data formats, BSS/OSS, mediation rules, data reconciliation, Tier III production support, root cause analysis, ETL, Oracle SQL"),
-        ("Unix / Linux / OS", "RHEL, CentOS, Debian, Ubuntu, HP/UX, Solaris, FreeBSD, Red Hat Satellite, Windows Server, Active Directory / IAM"),
-        ("IaC & configuration management", "Terraform, Ansible (playbooks, roles, YAML, Jinja2), CloudFormation, Puppet, Chef, Salt"),
+        ("Unix / Linux / OS", "RHEL, CentOS, Debian, Ubuntu, HP/UX, Solaris, FreeBSD, Red Hat Satellite, Windows Server"),
+        ("IaC & configuration management", "Terraform, Ansible (playbooks, roles, YAML, Jinja2), CloudFormation, Puppet, Chef"),
         ("CI/CD & version control", "Azure DevOps, GitHub Actions, GitLab CI/CD, Jenkins, Octopus Deploy, Git, pull-request code review and branching/tagging strategy; canary / A-B / blue-green deployment"),
         ("Cloud, containers & virtualization", "AWS (EC2, S3, RDS, VPC), Microsoft Azure (VMs, Storage, Virtual Networking, Azure DevOps), Google Cloud Platform, hybrid cloud, Docker, Kubernetes, microservices, KVM, VMware ESX/vCenter/Horizon"),
         ("Monitoring & observability", "ELK Stack (Elasticsearch, Logstash, Kibana), Splunk, Dynatrace, Prometheus, Grafana, centralized logging, alerting and dashboards, SLOs/SLIs, on-call incident response, postmortems and root cause analysis (RCA), SRE practices"),
@@ -52,7 +52,7 @@ PROFILE = dict(
     },
     one_liners={  # employers rendered as a single line (no bullets); facts verbatim from the master
         "CYBERRAZOR": "Built Fasttrack, a Ruby on Rails celeration-charting web app for behavior analysts at schools serving students with autism; trained 30+ educators, improving student progress tracking 20%.",
-        "VARIOUS": "Ran Unix systems and networks serving 3,000 subscribers for six dial-up-era ISPs and consultancies; shipped first commercial software at 13.",
+        "VARIOUS": "Ran Unix systems and networks serving 3,000 subscribers for six dial-up-era ISPs; shipped first commercial software at 13.",
     },
     sabbaticals={  # one line each (master BUILD GUIDE: "1 line each")
         "May 2019 - Feb 2020": "Sabbatical, international travel (Indonesia, Malaysia, Vietnam, Cambodia; conversational Bahasa Indonesia) | May 2019 - Feb 2020",
@@ -92,26 +92,28 @@ def select(R):
     T["ats_line"] = R["ats_line"]
     m = re.search(r"Last updated: (\d{4}-\d{2}-\d{2})", MASTER.read_text()); T["rev"] = m.group(1) if m else datetime.date.today().isoformat()
     T["date"] = datetime.date.today().isoformat()
+    # REV letter: A for the first shipped master month (2026-09), then B, C... per later master month
+    y, mth = int(T["rev"][:4]), int(T["rev"][5:7]); T["rev_letter"] = chr(ord("A") + max(0, (y - 2026) * 12 + (mth - 9)))
     return T
 
 # ------------------------------------------------------------------ text helpers
 def esc(s): return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 UNITS = r"(?:client organizations|enterprise clients|clients|switches|subscribers|educators|GitHub stars|forks|servers|states|vendors|manufacturing plants|plants)"
-FIG = re.compile(r"(\$\d[\d,.]*(?:M\b|\s?(?:million|billion))?(?:\s?annually)?"
-                 r"|\b\d[\d,.]*\s?%"
-                 r"|\b\d+x\b"
-                 r"|tens of millions of dollars"
-                 r"|\b\d+\+? years\b"
-                 r"|about \d+ minutes/year"
-                 r"|\bapprox\. \d[\d,]* " + UNITS +
-                 r"|\b\d[\d,]*\+? " + UNITS +
-                 r"|\b\d[\d,]*-(?:switch|vendor|server|state)\b)")
-def redline(s):
-    """Wrap hard figures in <b class=fig> (bold + redline red). Pure markup; the text is unchanged."""
+# Tier 1 (red): outcomes - money, percentages, multipliers, recovered revenue, uptime.
+OUTCOME = re.compile(r"(\$\d[\d,.]*(?:M\b|\s?(?:million|billion))?(?:\s?annually)?|\b\d[\d,.]*\s?%|\b\d+x\b|tens of millions of dollars|about \d+ minutes/year)")
+# Tier 2 (black bold): scale and tenure - counts of things run or delivered, years.
+SCALE = re.compile(r"(\bapprox\. \d[\d,]* " + UNITS + r"|\b\d[\d,]*\+? " + UNITS + r"|\b\d[\d,]*-(?:switch|vendor|server|state)\b|\b\d+\+? years\b)")
+FIG = re.compile("(" + OUTCOME.pattern[1:-1] + "|" + SCALE.pattern[1:-1] + ")")
+def redline(s, demote=()):
+    """Mark figures: outcomes -> <b class=fig> (red), scale/tenure -> <b class=num> (black bold).
+    `demote`: outcome strings that should render as tier 2 here (e.g. the summary's repeats of KEY ACHIEVEMENTS)."""
     out, i = [], 0
     for m in FIG.finditer(s):
-        g = m.group(0); cls = "fig" if g.count(" ") <= 1 else "fig wrap"     # long phrases may wrap; short figures never split
+        g = m.group(0)
+        tier1 = bool(OUTCOME.fullmatch(g)) and not any(d in g for d in demote)
+        cls = "fig" if tier1 else "num"
+        if g.count(" ") > 1: cls += " wrap"
         out.append(esc(s[i:m.start()])); out.append(f'<b class="{cls}">{esc(g)}</b>'); i = m.end()
     out.append(esc(s[i:])); return "".join(out)
 
@@ -193,7 +195,7 @@ def title_block(T, sheet, total):
     L.append(cell(t2, y0 - 0.5, "CAGE", "8PMQ9"))
     L.append(cell(x0, r1, "SIZE", "A"))
     L.append(cell(c1, r1, "DWG NO", "PP-RESUME-2026"))
-    L.append(cell(c2, r1, "REV", T["rev"][:7]))
+    L.append(cell(c2, r1, "REV", T["rev_letter"]))
     L.append(cell(c3, r1, "SCALE", "NTS"))
     L.append(cell(x0, r2, "DRAWN", "P. PADGETT"))
     L.append(cell(c1, r2, "DATE", T["date"]))
@@ -202,7 +204,7 @@ def title_block(T, sheet, total):
     return f'<svg class="tb" aria-hidden="true" viewBox="0 0 {TB_W} {TB_H}" width="{TB_W}pt" height="{TB_H}pt">{"".join(L)}</svg>'
 
 NOTES = ["ALL FIGURES ARE PRODUCTION RESULTS VERIFIED BY THE CANDIDATE.",
-         "RED FIGURES ARE MEASURED RESULTS AND SCALE. RED UNDERLINED TEXT IS A LIVE LINK.",
+         "RED FIGURES ARE MEASURED OUTCOMES; BOLD BLACK FIGURES ARE SCALE AND TENURE. RED UNDERLINED TEXT IS A LIVE LINK.",
          "LATEST REVISION OF THIS SHEET: RESUME.PATPADGETT.COM"]
 NB_W, NB_H = 232.0, 60.0
 def notes_block():
@@ -221,6 +223,12 @@ def notes_block():
             L.append(svg_text(ln, 9, y, 5.4, "D-DIN", 0.01)); y += 6.6
         y += 1.0
     return f'<svg class="nb" aria-hidden="true" viewBox="0 0 {NB_W} {NB_H}" width="{NB_W}pt" height="{NB_H}pt">{"".join(L)}</svg>'
+
+def cont_cue(i):
+    """Screen-only continuation mark in the zone-label idiom: glyph outlines, never text (stays out of the ATS layer and the print)."""
+    d, w = text_path(f"SHEET {i}  -  PROFESSIONAL EXPERIENCE, CONTINUED FROM SHEET {i - 1}", 5.6, "D-DIN-Bold", 0.08)
+    return (f'<svg class="cont" aria-hidden="true" viewBox="0 0 {w + 2:.1f} 8" width="{w + 2:.1f}pt" height="8pt">'
+            f'<path fill="{INK}" transform="translate(1 6.2)" d="{d}"/></svg>')
 
 DET = 78.0   # detail circle diameter in pt
 def detail_view():
@@ -247,15 +255,13 @@ def body_blocks(T):
     B.append('<header class="head"><div class="head-text">'
              f'<h1>{esc(T["name"])}</h1>'
              f'<p class="headline">{esc(T["headline"])}</p>'
-             f'<p class="contact"><a href="tel:{tel}">{esc(phone)}</a> | <a href="mailto:{esc(c["Email"])}">{esc(c["Email"])}</a> | {esc(c["Location"])}</p>'
-             f'<p class="contact"><a href="{esc(c["LinkedIn"])}">linkedin.com/in/patpadgett</a> | <a href="{esc(c["GitHub"])}">github.com/patpadgett</a> | <a href="{esc(c["Website"])}">patpadgett.com</a></p>'
+             f'<p class="contact"><span><a href="tel:{tel}">{esc(phone)}</a></span><span><a href="mailto:{esc(c["Email"])}">{esc(c["Email"])}</a></span><span>{esc(c["Location"])}</span></p>'
+             f'<p class="contact"><span><a href="{esc(c["LinkedIn"])}">linkedin.com/in/patpadgett</a></span><span><a href="{esc(c["GitHub"])}">github.com/patpadgett</a></span><span><a href="{esc(c["Website"])}">patpadgett.com</a></span></p>'
              f'</div>{detail_view()}</header>')
     B.append('<h2>PROFESSIONAL SUMMARY</h2>')
-    B.append(f'<p class="summary">{redline(T["summary"])}</p>')
+    B.append(f'<p class="summary">{redline(T["summary"], demote=("$2M", "250%", "50%", "$50M"))}</p>')
     B.append('<h2>KEY ACHIEVEMENTS</h2>')
     B.append('<ul>' + "".join(f'<li>{redline(a)}</li>' for a in T["achievements"]) + '</ul>')
-    B.append('<h2>TECHNICAL SKILLS</h2>')
-    B.append('<ul class="skills">' + "".join(f'<li><b>{esc(k)}:</b> {esc(v)}</li>' for k, v in T["skills"]) + '</ul>')
     B.append('<h2>PROFESSIONAL EXPERIENCE</h2>')
     order = ["VIMOPS", "May 2019 - Feb 2020", "JABIL", "May 2017 - Mar 2018", "RAYMOND", "CODESIGNED", "SPRINT", "CYBERRAZOR", "VARIOUS"]
     jobs = {j["org"].split()[0]: j for j in T["experience"]}
@@ -270,14 +276,15 @@ def body_blocks(T):
             B.append('<ul class="exp">' + "".join(f'<li>{redline(b)}</li>' for b in j["bullets"]) + '</ul>')
         elif j.get("line"):
             B.append(f'<p class="oneline">{redline(j["line"])}</p>')
+    B.append('<h2>TECHNICAL SKILLS</h2>')
+    B.append('<ul class="skills">' + "".join(f'<li><b>{esc(k)}:</b> {esc(v)}</li>' for k, v in T["skills"]) + '</ul>')
     B.append('<h2>PROJECTS</h2>')
     head = T["project"]["head"]
     head_html = esc(head).replace("github.com/patpadgett/corkscrew", '<a href="https://github.com/patpadgett/corkscrew">github.com/patpadgett/corkscrew</a>')
     B.append(f'<p class="proj"><b>{head_html}</b></p>')
     B.append(f'<p>{redline(T["project"]["desc"])}</p>')
     B.append('<h2>EDUCATION AND PROFESSIONAL DEVELOPMENT</h2>')
-    B.append(f'<p>{esc(" | ".join(T["education"]))}</p>')
-    B.append('<ul>' + "".join(f'<li>{esc(d)}</li>' for d in T["profdev"]) + '</ul>')
+    B.append(f'<div class="edu"><p>{esc(" | ".join(T["education"]))}</p><p class="profdev">{esc(" ".join(T["profdev"]))}</p></div>')
     return B
 
 # ------------------------------------------------------------------ page
@@ -297,12 +304,13 @@ def page_html(T, blocks, paginated=None):
           "mainEntityOfPage": {"@type": "WebPage", "@id": SITE + "/", "name": "Patrick Padgett - Resume",
                                "hasPart": {"@type": "DigitalDocument", "name": "Patrick Padgett - Resume (PDF)", "url": f"{SITE}/{PDF_NAME}", "encodingFormat": "application/pdf"}}}
     ldjson = json.dumps(ld, separators=(",", ":"))
+    tel = "+" + re.sub(r"\D", "", T["contact"]["Phone"])
     total = len(paginated) if paginated else 1
     if paginated is None:
         sheets = f'<section class="sheet" data-sheet="1">{zone_strips()}<div class="flow">{"".join(blocks)}</div>' \
                  f'<div class="foot">{notes_block()}{title_block(T, 1, 2)}</div></section>'
     else:
-        sheets = "".join(f'<section class="sheet" data-sheet="{i}">{zone_strips()}<div class="flow">{html}</div>'
+        sheets = "".join(f'<section class="sheet" data-sheet="{i}">{zone_strips()}{cont_cue(i) if i > 1 else ""}<div class="flow">{html}</div>'
                          f'<div class="foot">{notes_block()}{title_block(T, i, total)}</div></section>' for i, html in enumerate(paginated, 1))
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -338,17 +346,17 @@ def page_html(T, blocks, paginated=None):
 <nav class="bar" aria-label="Resume downloads">
   <a class="bar-name" href="{SITE}/">PATRICK PADGETT <span>RESUME</span></a>
   <div class="bar-actions">
-    <a class="btn btn-ink" href="{PDF_NAME}" download>Download PDF</a>
-    <a class="btn" href="Patrick_Padgett_Resume.docx" download>Word (.docx)</a>
-    <a class="btn" href="Patrick_Padgett_Resume.txt" download>Plain text</a>
+    <a class="btn btn-ink" href="{PDF_NAME}" download><span class="long">Download PDF</span><span class="short" aria-hidden="true">PDF</span></a>
+    <a class="btn" href="Patrick_Padgett_Resume.docx" download><span class="long">Word (.docx)</span><span class="short" aria-hidden="true">Word</span></a>
+    <a class="btn" href="Patrick_Padgett_Resume.txt" download><span class="long">Plain text</span><span class="short" aria-hidden="true">Text</span></a>
   </div>
 </nav>
 <main class="board" id="top">
 {sheets}
 </main>
 <footer class="colophon">
-  <p>Set in D-DIN. Two inks on bond. Every figure is from the master record; ask about any of them.</p>
-  <p><a href="https://patpadgett.com">patpadgett.com</a> &middot; <a href="https://work.patpadgett.com">work</a> &middot; <a href="https://blog.patpadgett.com">blog</a> &middot; <a href="https://music.patpadgett.com">music</a> &middot; <a href="https://octavitin.patpadgett.com">octavitin</a> &middot; <a href="https://www.linkedin.com/in/patpadgett">LinkedIn</a> &middot; <a href="https://github.com/patpadgett">GitHub</a></p>
+  <p class="colophon-cta"><a class="btn btn-ink" href="mailto:pat@patpadgett.com">Email Patrick</a> <a class="btn" href="tel:{tel}">Call {esc(T["contact"]["Phone"])}</a> <a class="btn" href="{PDF_NAME}" download>Download PDF</a></p>
+  <p>Every figure is from the master record; ask about any of them. <a href="https://www.linkedin.com/in/patpadgett">LinkedIn</a> &middot; <a href="https://github.com/patpadgett">GitHub</a> &middot; <a href="https://patpadgett.com">patpadgett.com</a></p>
 </footer>
 </body>
 </html>
@@ -394,14 +402,14 @@ def make_docx_txt(T):
     jobs = {j["org"].split()[0]: j for j in T["experience"]}
     L = [T["name"], T["headline"], f'{c["Phone"]} | {c["Email"]} | {c["Location"]}',
          "linkedin.com/in/patpadgett | github.com/patpadgett | patpadgett.com", "",
-         "PROFESSIONAL SUMMARY", T["summary"], "", "KEY ACHIEVEMENTS"] + [f"- {a}" for a in T["achievements"]] + ["", "TECHNICAL SKILLS"]
-    L += [f"{k}: {v}" for k, v in T["skills"]] + ["", "PROFESSIONAL EXPERIENCE"]
+         "PROFESSIONAL SUMMARY", T["summary"], "", "KEY ACHIEVEMENTS"] + [f"- {a}" for a in T["achievements"]] + ["", "PROFESSIONAL EXPERIENCE"]
     for key in order:
         if key in T["sabbaticals"]: L += [T["sabbaticals"][key], ""]; continue
         j = jobs[key]; org = j["org"] if key != "VARIOUS" else "Various ISPs and Consultancies"
         L += [f"{org} | {j['loc']}", f"{j['title']} | {j['dates']}"]
         L += [f"- {b}" for b in j["bullets"]] if j["bullets"] else ([j["line"]] if j.get("line") else [])
         L.append("")
+    L += ["TECHNICAL SKILLS"] + [f"{k}: {v}" for k, v in T["skills"]] + [""]
     L += ["PROJECTS", T["project"]["head"], T["project"]["desc"], "", "EDUCATION AND PROFESSIONAL DEVELOPMENT", " | ".join(T["education"])]
     L += [f"- {d}" for d in T["profdev"]] + ["", "KEYWORDS", T["ats_line"], ""]
     txt = "\n".join(L); ascii_check(txt)
@@ -426,9 +434,6 @@ def make_docx_txt(T):
     para(f'{c["Phone"]} | {c["Email"]} | {c["Location"]}', after=0); para("linkedin.com/in/patpadgett | github.com/patpadgett | patpadgett.com", after=6)
     head("PROFESSIONAL SUMMARY"); para(T["summary"])
     head("KEY ACHIEVEMENTS"); [bullet(a) for a in T["achievements"]]
-    head("TECHNICAL SKILLS")
-    for k, v in T["skills"]:
-        p = d.add_paragraph(); r = p.add_run(k + ": "); r.bold = True; p.add_run(v); p.paragraph_format.space_after = Pt(2)
     head("PROFESSIONAL EXPERIENCE")
     for key in order:
         if key in T["sabbaticals"]: para(T["sabbaticals"][key], italic=True, before=4, after=2); continue
@@ -436,6 +441,9 @@ def make_docx_txt(T):
         para(f"{org} | {j['loc']}", bold=True, before=6, after=0); para(f"{j['title']} | {j['dates']}", after=2)
         if j["bullets"]: [bullet(b) for b in j["bullets"]]
         elif j.get("line"): para(j["line"])
+    head("TECHNICAL SKILLS")
+    for k, v in T["skills"]:
+        p = d.add_paragraph(); r = p.add_run(k + ": "); r.bold = True; p.add_run(v); p.paragraph_format.space_after = Pt(2)
     head("PROJECTS"); para(T["project"]["head"], bold=True, after=1); para(T["project"]["desc"])
     head("EDUCATION AND PROFESSIONAL DEVELOPMENT"); para(" | ".join(T["education"]), after=2); [bullet(x) for x in T["profdev"]]
     head("KEYWORDS"); para(T["ats_line"], size=9)
