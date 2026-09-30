@@ -3,40 +3,40 @@ name: Patrick Padgett — Engineering Drawing Sheet
 description: Two inks on bond, with a semantic resume inside outlined drawing-sheet furniture.
 colors:
   ink: "#141414"
-  red: "#C8102E"
+  red: "#B00E28"
   paper: "#FFFFFF"
   board: "#C4CFC1"
   board-deep: "#A9B7A6"
 typography:
   display:
-    fontFamily: '"D-DIN Exp", "D-DIN", sans-serif'
+    fontFamily: '"D-DIN Exp", "D-DIN Exp Fallback", "D-DIN", "D-DIN Fallback", sans-serif'
     fontSize: "26pt"
     fontWeight: 700
     lineHeight: 1
     letterSpacing: "0"
   headline:
-    fontFamily: '"D-DIN", "DIN Alternate", "Bahnschrift", "Liberation Sans", Arial, sans-serif'
+    fontFamily: '"D-DIN", "D-DIN Fallback", "Liberation Sans", Arial, sans-serif'
     fontSize: "9.6pt"
     fontWeight: 700
     lineHeight: "12pt"
   section:
-    fontFamily: '"D-DIN", "DIN Alternate", "Bahnschrift", "Liberation Sans", Arial, sans-serif'
+    fontFamily: '"D-DIN", "D-DIN Fallback", "Liberation Sans", Arial, sans-serif'
     fontSize: "8.6pt"
     fontWeight: 700
     lineHeight: "10pt"
     letterSpacing: "0"
   body:
-    fontFamily: '"D-DIN", "DIN Alternate", "Bahnschrift", "Liberation Sans", Arial, sans-serif'
+    fontFamily: '"D-DIN", "D-DIN Fallback", "Liberation Sans", Arial, sans-serif'
     fontSize: "9.4pt"
     fontWeight: 400
     lineHeight: "11.2pt"
   contact:
-    fontFamily: '"D-DIN", "DIN Alternate", "Bahnschrift", "Liberation Sans", Arial, sans-serif'
+    fontFamily: '"D-DIN", "D-DIN Fallback", "Liberation Sans", Arial, sans-serif'
     fontSize: "9pt"
     fontWeight: 400
     lineHeight: "12.5pt"
   title:
-    fontFamily: '"D-DIN", "DIN Alternate", "Bahnschrift", "Liberation Sans", Arial, sans-serif'
+    fontFamily: '"D-DIN", "D-DIN Fallback", "Liberation Sans", Arial, sans-serif'
     fontSize: "9.2pt"
     fontWeight: 700
     lineHeight: "11.2pt"
@@ -47,43 +47,43 @@ typography:
     lineHeight: 1
     letterSpacing: "0.1em"
   body-mobile:
-    fontFamily: '"D-DIN", "DIN Alternate", "Bahnschrift", "Liberation Sans", Arial, sans-serif'
+    fontFamily: '"D-DIN", "D-DIN Fallback", "Liberation Sans", Arial, sans-serif'
     fontSize: "15px"
     fontWeight: 400
     lineHeight: "22px"
   display-mobile:
-    fontFamily: '"D-DIN Exp", "D-DIN", sans-serif'
+    fontFamily: '"D-DIN Exp", "D-DIN Exp Fallback", "D-DIN", "D-DIN Fallback", sans-serif'
     fontSize: "clamp(22px, 6.8vw, 34px)"
     fontWeight: 700
     lineHeight: 1
   section-mobile:
-    fontFamily: '"D-DIN", "DIN Alternate", "Bahnschrift", "Liberation Sans", Arial, sans-serif'
+    fontFamily: '"D-DIN", "D-DIN Fallback", "Liberation Sans", Arial, sans-serif'
     fontSize: "12px"
     fontWeight: 700
     lineHeight: "16px"
   title-mobile:
-    fontFamily: '"D-DIN", "DIN Alternate", "Bahnschrift", "Liberation Sans", Arial, sans-serif'
+    fontFamily: '"D-DIN", "D-DIN Fallback", "Liberation Sans", Arial, sans-serif'
     fontSize: "14px"
     fontWeight: 700
     lineHeight: "21px"
   contact-mobile:
-    fontFamily: '"D-DIN", "DIN Alternate", "Bahnschrift", "Liberation Sans", Arial, sans-serif'
+    fontFamily: '"D-DIN", "D-DIN Fallback", "Liberation Sans", Arial, sans-serif'
     fontSize: "14px"
     fontWeight: 400
     lineHeight: "21px"
   wordmark:
-    fontFamily: '"D-DIN Exp", "D-DIN", sans-serif'
+    fontFamily: '"D-DIN Exp", "D-DIN Exp Fallback", "D-DIN", "D-DIN Fallback", sans-serif'
     fontSize: "13px"
     fontWeight: 700
     lineHeight: 1
     letterSpacing: "0.06em"
   colophon:
-    fontFamily: '"D-DIN", "DIN Alternate", "Bahnschrift", "Liberation Sans", Arial, sans-serif'
+    fontFamily: '"D-DIN", "D-DIN Fallback", "Liberation Sans", Arial, sans-serif'
     fontSize: "12px"
     fontWeight: 400
     lineHeight: "18px"
   colophon-mobile:
-    fontFamily: '"D-DIN", "DIN Alternate", "Bahnschrift", "Liberation Sans", Arial, sans-serif'
+    fontFamily: '"D-DIN", "D-DIN Fallback", "Liberation Sans", Arial, sans-serif'
     fontSize: "13px"
     fontWeight: 400
     lineHeight: "20px"
@@ -173,6 +173,9 @@ Recorded from `styles.css`, `index.html` and the drawing generators in `build.py
 Selection uses a red background with white text, not red text on white. Body links are red; colophon links are black at rest and red on hover. Do not interpret the accent rule as banning the implemented red interaction states.
 
 ## Typography
+
+### Chrome colour and the glyph sprite
+Drawing chrome (zone bands, title block, NOTES, continuation cue, DETAIL A caption) is painted with `fill`/`stroke: currentColor` and takes `color: var(--ink)` from CSS, so the SVG carries no colour literals; the title block's paper cell is `.tb .paper { fill: var(--paper) }`. Every distinct glyph string is emitted once as a `<symbol>` in a zero-size `.sprite` SVG before the sheets and placed with `<use href x y>`; both sheets share the zone letters, NOTES and most title-block cells, which halves the HTML (185 KB -> 110 KB, 38 KB gzipped). Sheet shadows use `--shadow-sheet` / `--shadow-sheet-lift`, built from `--ink-rgb`; no rgba literals remain.
 
 ### Fallback contract
 D-DIN is self-hosted and preloaded (Exp Bold, Bold, Regular; Italic lazy). If the woff2 files never arrive, `"D-DIN Fallback"` / `"D-DIN Exp Fallback"` take over: `local()` Liberation Sans / Arial / Helvetica with `size-adjust` (92.4% regular, 87.7% bold, 92.8% italic, 92.6% Exp Bold) and ascent/descent overrides measured in Chromium against the resume's own text, so both fixed sheets keep their line breaks and nothing clips. `render.js --final` aborts every font request and fails the build (exit 3) if either flow overflows or the last list item leaves sheet 2. Re-measure the ratios (scratch `fallback_metrics.js`) whenever a face is swapped.
@@ -282,4 +285,5 @@ Screen-only close below the sheets, maximum width matching Letter paper. Leads w
 - **Don't** turn single-column reading content into title-block-style tables or decorative text paths.
 - **Don't** add a fourth pen weight or a third ink; the ramp is hair / med / heavy and the palette is ink / red on paper.
 - **Don't** add a Print action or a portrait leader; the built device is a captioned detail view and the PDF is the print path.
+- **Don't** reintroduce colour literals into the generated SVG or rgba() shadows; chrome is `currentColor`, shadows come from `--ink-rgb`.
 - **Don't** put red on scale or tenure figures; red is spent on outcomes only, and the summary never out-reds the achievements.

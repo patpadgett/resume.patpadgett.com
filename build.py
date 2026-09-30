@@ -17,7 +17,7 @@ FONT_SRC = Path("/data/pat/.hermes/cache/scratch/fonts/ddin")           # D-DIN 
 HEADSHOT_SRC = Path("/data/pat/career/resume/resume-ats/final-noc/assets/avatar@2x.jpg")
 SITE = "https://resume.patpadgett.com"
 PDF_NAME = "Patrick_Padgett_Resume.pdf"
-INK, RED, PAPER = "#141414", "#C8102E", "#FFFFFF"
+INK, RED, PAPER = "#141414", "#B00E28", "#FFFFFF"   # red at 7.0:1 on paper (WCAG AAA at body size)
 
 # ------------------------------------------------------------------ master parser (shared with the ATS pipeline)
 spec = importlib.util.spec_from_file_location("bfm", "/data/pat/career/resume/build_from_master.py")
@@ -140,12 +140,27 @@ def text_path(s, size, fontname="D-DIN", tracking=0.0):
     d = re.sub(r"(\d+\.\d{2})\d+", r"\1", pen.getCommands())
     return d, x
 
-def svg_text(s, x, y, size, fontname="D-DIN", tracking=0.0, anchor="start", fill=INK, cls=""):
-    d, w = text_path(s, size, fontname, tracking)
+_SPRITE = {}   # (s, size, font, tracking) -> (symbol id, path d, advance)
+def glyph_symbol(s, size, fontname="D-DIN", tracking=0.0):
+    """Register a glyph-outline string once; every sheet references the same <symbol> via <use>. Halves the HTML: zone letters,
+    NOTES and most title-block cells are identical on both sheets."""
+    key = (s, round(size, 3), fontname, round(tracking, 3))
+    if key not in _SPRITE:
+        d, w = text_path(s, size, fontname, tracking)
+        _SPRITE[key] = (f"g{len(_SPRITE)}", d, w)
+    return _SPRITE[key]
+
+def svg_text(s, x, y, size, fontname="D-DIN", tracking=0.0, anchor="start", fill="currentColor", cls=""):
+    gid, d, w = glyph_symbol(s, size, fontname, tracking)
     if anchor == "end": x -= w
     elif anchor == "middle": x -= w / 2
     c = f' class="{cls}"' if cls else ""
-    return f'<path{c} fill="{fill}" transform="translate({x:.2f} {y:.2f})" d="{d}"/>'
+    return f'<use{c} href="#{gid}" x="{x:.2f}" y="{y:.2f}"/>'
+
+def sprite_svg():
+    """The hidden sprite: one <symbol> per distinct glyph string, emitted once per page before the sheets."""
+    syms = "".join(f'<symbol id="{gid}" overflow="visible"><path d="{d}"/></symbol>' for gid, d, w in _SPRITE.values())
+    return f'<svg class="sprite" aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden">{syms}</svg>'
 
 # ------------------------------------------------------------------ sheet chrome (border, zone ticks, title block, notes, detail)
 PT = 72.0                     # 1in in pt
@@ -160,10 +175,9 @@ def zone_strips():
     cols, rows = 4, 4; size = 6.0; cap = size * 0.72
     iw, ih = W - 2 * BORDER, H - 2 * BORDER
     def glyph(ch, x, y):
-        d, w = text_path(ch, size, "D-DIN-Bold")
-        return f'<path fill="{INK}" transform="translate({x - w/2:.2f} {y:.2f})" d="{d}"/>'
+        return svg_text(ch, x, y, size, "D-DIN-Bold", anchor="middle")
     mid = (TRIM + BORDER) / 2
-    L = [f'<rect x="{TRIM}" y="{TRIM}" width="{W - 2*TRIM}" height="{H - 2*TRIM}" fill="none" stroke="{INK}" stroke-width="{HAIR}"/>']
+    L = [f'<rect x="{TRIM}" y="{TRIM}" width="{W - 2*TRIM}" height="{H - 2*TRIM}" fill="none" stroke="currentColor" stroke-width="{HAIR}"/>']
     for i in range(1, cols):
         x = BORDER + i * iw / cols
         L.append(f'<line x1="{x:.2f}" x2="{x:.2f}" y1="{TRIM}" y2="{BORDER}"/><line x1="{x:.2f}" x2="{x:.2f}" y1="{H - BORDER}" y2="{H - TRIM}"/>')
@@ -176,7 +190,7 @@ def zone_strips():
     for i in range(rows):
         y = BORDER + (i + .5) * ih / rows
         L.append(glyph("ABCD"[i], mid, y + cap / 2)); L.append(glyph("ABCD"[i], W - mid, y + cap / 2))
-    return f'<svg class="zone" aria-hidden="true" viewBox="0 0 {W} {H}" width="{W}pt" height="{H}pt"><g stroke="{INK}" stroke-width="{HAIR}">{"".join(L)}</g></svg>'
+    return f'<svg class="zone" aria-hidden="true" viewBox="0 0 {W} {H}" width="{W}pt" height="{H}pt"><g stroke="currentColor" stroke-width="{HAIR}">{"".join(L)}</g></svg>'
 
 TB_W, TB_H = 282.0, 60.0     # title block in pt; sits in the sheet's bottom-right corner against the border
 def title_block(T, sheet, total):
@@ -184,8 +198,8 @@ def title_block(T, sheet, total):
     r1, r2 = 22.0, 41.0
     c1, c2, c3 = 66.0, 150.0, 222.0
     t1, t2 = 128.0, 226.0
-    L = [f'<rect x="{x0}" y="{y0}" width="{w}" height="{h}" fill="{PAPER}" stroke="{INK}" stroke-width="{MED}"/>',
-         f'<g stroke="{INK}" stroke-width="{HAIR}"><line x1="{x0}" x2="{x0+w}" y1="{r1}" y2="{r1}"/><line x1="{x0}" x2="{x0+w}" y1="{r2}" y2="{r2}"/>'
+    L = [f'<rect class="paper" x="{x0}" y="{y0}" width="{w}" height="{h}" stroke="currentColor" stroke-width="{MED}"/>',
+         f'<g stroke="currentColor" stroke-width="{HAIR}"><line x1="{x0}" x2="{x0+w}" y1="{r1}" y2="{r1}"/><line x1="{x0}" x2="{x0+w}" y1="{r2}" y2="{r2}"/>'
          f'<line x1="{t1}" x2="{t1}" y1="{y0}" y2="{r1}"/><line x1="{t2}" x2="{t2}" y1="{y0}" y2="{r1}"/>'
          f'<line x1="{c1}" x2="{c1}" y1="{r1}" y2="{y0+h}"/><line x1="{c2}" x2="{c2}" y1="{r1}" y2="{y0+h}"/><line x1="{c3}" x2="{c3}" y1="{r1}" y2="{y0+h}"/></g>']
     def cell(x, y, lab, val, valfont="D-DIN-Bold", vsize=7.2, track=0.0):
@@ -210,7 +224,7 @@ NB_W, NB_H = 232.0, 60.0
 def notes_block():
     """NOTES: rule at y=22, level with the title block's first row line; three notes below, clear of the border."""
     L = [svg_text("NOTES", 0, 17.0, 6.0, "D-DIN-Bold", 0.10),
-         f'<line x1="0" x2="{NB_W}" y1="22" y2="22" stroke="{INK}" stroke-width="{HAIR}"/>']
+         f'<line x1="0" x2="{NB_W}" y1="22" y2="22" stroke="currentColor" stroke-width="{HAIR}"/>']
     y = 30.0
     for i, n in enumerate(NOTES, 1):
         L.append(svg_text(f"{i}.", 0, y, 5.4, "D-DIN"))
@@ -226,23 +240,22 @@ def notes_block():
 
 def cont_cue(i):
     """Screen-only continuation mark in the zone-label idiom: glyph outlines, never text (stays out of the ATS layer and the print)."""
-    d, w = text_path(f"SHEET {i}  -  PROFESSIONAL EXPERIENCE, CONTINUED FROM SHEET {i - 1}", 5.6, "D-DIN-Bold", 0.08)
+    gid, d, w = glyph_symbol(f"SHEET {i}  -  PROFESSIONAL EXPERIENCE, CONTINUED FROM SHEET {i - 1}", 5.6, "D-DIN-Bold", 0.08)
     return (f'<svg class="cont" aria-hidden="true" viewBox="0 0 {w + 2:.1f} 8" width="{w + 2:.1f}pt" height="8pt">'
-            f'<path fill="{INK}" transform="translate(1 6.2)" d="{d}"/></svg>')
+            f'<use href="#{gid}" x="1" y="6.2"/></svg>')
 
 DET = 78.0   # detail circle diameter in pt
 def detail_view():
     """DETAIL A: the headshot as a detail view; caption centred beneath it, as on a drawing."""
     r = DET / 2; cx = r + 2; cy = r + 2; W_ = DET + 4
     cap_y = DET + 14.0
-    d1, w1 = text_path("DETAIL A", 7.4, "D-DIN-Bold", 0.10)
-    d2, w2 = text_path("SCALE NTS", 5.4, "D-DIN", 0.10)
+    w1 = glyph_symbol("DETAIL A", 7.4, "D-DIN-Bold", 0.10)[2]
     L = [f'<defs><clipPath id="detclip"><circle cx="{cx}" cy="{cy}" r="{r - 0.5}"/></clipPath></defs>',
          f'<image href="assets/headshot.jpg" x="{cx - r}" y="{cy - r}" width="{DET}" height="{DET}" clip-path="url(#detclip)" preserveAspectRatio="xMidYMid slice"/>',
-         f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="{INK}" stroke-width="{MED}"/>',
-         f'<path fill="{INK}" transform="translate({cx - w1/2:.2f} {cap_y:.2f})" d="{d1}"/>',
-         f'<line x1="{cx - w1/2:.2f}" x2="{cx + w1/2:.2f}" y1="{cap_y + 2.6:.2f}" y2="{cap_y + 2.6:.2f}" stroke="{INK}" stroke-width="{HAIR}"/>',
-         f'<path fill="{INK}" transform="translate({cx - w2/2:.2f} {cap_y + 10.2:.2f})" d="{d2}"/>']
+         f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="currentColor" stroke-width="{MED}"/>',
+         svg_text("DETAIL A", cx, cap_y, 7.4, "D-DIN-Bold", 0.10, anchor="middle"),
+         f'<line x1="{cx - w1/2:.2f}" x2="{cx + w1/2:.2f}" y1="{cap_y + 2.6:.2f}" y2="{cap_y + 2.6:.2f}" stroke="currentColor" stroke-width="{HAIR}"/>',
+         svg_text("SCALE NTS", cx, cap_y + 10.2, 5.4, "D-DIN", 0.10, anchor="middle")]
     H_ = cap_y + 11
     return (f'<figure class="detail"><svg viewBox="0 0 {W_:.1f} {H_:.1f}" width="{W_:.1f}pt" height="{H_:.1f}pt" role="img" aria-label="Patrick Padgett, headshot">'
             f'{"".join(L)}</svg></figure>')
@@ -312,6 +325,7 @@ def page_html(T, blocks, paginated=None):
     else:
         sheets = "".join(f'<section class="sheet" data-sheet="{i}">{zone_strips()}{cont_cue(i) if i > 1 else ""}<div class="flow">{html}</div>'
                          f'<div class="foot">{notes_block()}{title_block(T, i, total)}</div></section>' for i, html in enumerate(paginated, 1))
+    sheets = sprite_svg() + sheets   # the detail view's caption registers during block building, before this point
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -396,7 +410,7 @@ def make_assets(T):
     mark(64).save(ROOT / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
     d, w = text_path("PP", 42, "D-DINExp-Bold")
     (A / "icon.svg").write_text(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="{PAPER}"/>'
-                                f'<circle cx="50" cy="50" r="41" fill="none" stroke="{INK}" stroke-width="5.5"/>'
+                                f'<circle cx="50" cy="50" r="41" fill="none" stroke="currentColor" stroke-width="5.5"/>'
                                 f'<path fill="{RED}" transform="translate({50 - w/2:.2f} 65)" d="{d}"/></svg>\n')
 
 def make_docx_txt(T):
@@ -512,6 +526,7 @@ def main():
     no_pdf = "--no-pdf" in sys.argv
     R = bfm.parse(MASTER.read_text()); T = select(R)
     make_assets(T); make_docx_txt(T); make_site_files(); make_og_page(T)
+    _SPRITE.clear()
     blocks = body_blocks(T)
     flow_html = page_html(T, blocks)
     ascii_check(re.sub(r"<[^>]+>", "", flow_html).replace("&middot;", ""))
