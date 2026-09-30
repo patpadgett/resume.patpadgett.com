@@ -32,7 +32,7 @@
 }
 
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; scrollbar-color: var(--board-deep) var(--board); -webkit-tap-highlight-color: color-mix(in srgb, var(--red) 18%, transparent); }
 body {
   margin: 0;
   background: var(--board);
@@ -58,10 +58,12 @@ a:hover { text-decoration-thickness: var(--med); }
   position: sticky; top: 0; z-index: 5;
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
   padding: 12px 20px;
-  background: color-mix(in srgb, var(--board) 88%, transparent);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid var(--board-deep);
+  /* the row keys to the sheet: 8.5in plus one board margin each side, so on wide screens the controls stay with the document */
+  width: min(100%, calc(8.5in + 2 * 160px)); margin: 0 auto; box-sizing: border-box;
+  background: transparent;
 }
+.bar::before { content: ""; position: absolute; inset: 0 calc(50% - 50vw); z-index: -1; background: color-mix(in srgb, var(--board) 88%, transparent); backdrop-filter: blur(6px); border-bottom: 1px solid var(--board-deep); }
+.bar { isolation: isolate; }
 .bar-name { color: var(--ink); text-decoration: none; font: 700 13px/1 "D-DIN Exp", "D-DIN Exp Fallback", "D-DIN", "D-DIN Fallback", sans-serif; letter-spacing: 0.06em; white-space: nowrap; }
 .bar-name span { font-family: "D-DIN", "D-DIN Fallback", sans-serif; font-weight: 400; letter-spacing: 0.14em; margin-left: 8px; }
 .bar-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
@@ -132,7 +134,7 @@ h1 {
 .headline { margin: 0 0 5pt; font-weight: 700; font-size: 9.6pt; line-height: 12pt; }
 .contact { margin: 0; font-size: 9pt; line-height: 12.5pt; display: flex; flex-wrap: wrap; column-gap: 0; }
 .contact > span { display: inline-block; }
-.contact > span + span::before { content: ""; display: inline-block; width: var(--hair); height: 0.85em; background: var(--ink); margin: 0 7pt; vertical-align: -0.1em; }
+.contact > span + span::before { content: ""; display: inline-block; width: 0; height: 0.85em; border-left: var(--hair) solid var(--ink); margin: 0 7pt; vertical-align: -0.1em; }
 
 .flow h2 {
   display: block;
@@ -142,10 +144,8 @@ h1 {
   font-size: 8.6pt; line-height: 10pt; font-weight: 700; letter-spacing: 0; word-spacing: 0.18em;
 }
 .flow .head + h2 { margin-top: 9pt; }
-.flow ul.cont { margin-top: 0; }
 
 .flow p { margin: 0 0 2.5pt; }
-.summary { max-width: 100%; }
 .flow ul { margin: 0 0 1pt; padding: 0 0 0 11pt; list-style: disc; }
 li { margin: 0 0 1.8pt; padding-left: 1pt; }
 li::marker { color: var(--ink); font-size: 0.9em; }
