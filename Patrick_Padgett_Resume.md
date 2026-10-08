@@ -67,6 +67,9 @@ Operations & ITSM: on-call and Tier 2/3 escalation, troubleshooting, release and
 corkscrew | Creator and Maintainer | C, GNU Autotools, GitHub Actions | 2000 - Present | github.com/patpadgett/corkscrew
 Tunnels OpenSSH through HTTP/HTTPS proxies; 194 GitHub stars, 36 forks, GPL-2.0. Packaged in Debian, Ubuntu, Red Hat, CentOS, FreeBSD and Cygwin; reviewed in Linux Magazine (Issue 166, 2014) and 2600: The Hacker Quarterly, demonstrated in books and YouTube videos, and has its own Wikipedia article.
 
+undo, whom, huh | Creator | Python 3 (standard library only), pytest, GitHub Actions | 2026 | github.com/patpadgett
+Three single-file Linux tools shipped in 2026, MIT, with unit tests: undo (a shell undo button for mv, cp, rm, chmod, chown, ln, mkdir, rmdir), whom (who to ask about a file and whether they are awake, from git history; PyPI whom-cli) and huh (what is this string: 56 detectors, 110 tests in CI; PyPI whatsthis).
+
 ## EDUCATION AND PROFESSIONAL DEVELOPMENT
 Lake Career & Technical Center - Camdenton, Missouri | Certificate, Graphic Arts
 - Self-directed study in DevOps practices and Infrastructure as Code (2017 - 2018) leading directly to the Jabil Senior Infrastructure Automation Engineer role.

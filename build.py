@@ -59,6 +59,10 @@ PROFILE = dict(
         "May 2017 - Mar 2018": "Sabbatical, U.S. travel and independent study of DevOps practices and Infrastructure as Code | May 2017 - Mar 2018",
     },
     corkscrew_sentences=2,
+    extra_projects=("undo", "whom", "huh"),
+    # one sentence per tool, every claim traceable to the master's PROJECTS entries (test counts, PyPI names, MIT)
+    extra_projects_desc=("Three single-file Linux tools shipped in 2026, MIT, with unit tests: undo (a shell undo button for mv, cp, rm, chmod, chown, ln, mkdir, rmdir), "
+                         "whom (who to ask about a file and whether they are awake, from git history; PyPI whom-cli) and huh (what is this string: 56 detectors, 110 tests in CI; PyPI whatsthis)."),
 )
 
 def select(R):
@@ -87,6 +91,14 @@ def select(R):
     sents = re.split(r"(?<=\.) ", ck["desc"])
     desc = " ".join(sents[:PROFILE["corkscrew_sentences"]])
     T["project"] = {"head": ck["head"], "desc": desc}
+    # 2026 open-source tools (Patrick's standing order: on every technical resume) - first sentence of each master entry
+    # the sheet has room for one more entry, so the three tools share a single compact block (full entries live on the tailored PDFs)
+    extra = [p for p in R["projects"] if p["name"] in PROFILE.get("extra_projects", ())]
+    T["projects"] = [T["project"]]
+    if extra:
+        names = ", ".join(p["name"] for p in extra)
+        T["projects"].append({"head": f"{names} | Creator | Python 3 (standard library only), pytest, GitHub Actions | 2026 | github.com/patpadgett",
+                              "desc": PROFILE["extra_projects_desc"]})
     T["education"] = R["education"]
     T["profdev"] = [d if d.endswith(".") else d + "." for d in R["profdev"][:1]]
     T["ats_line"] = R["ats_line"]
@@ -292,10 +304,10 @@ def body_blocks(T):
     B.append('<h2>TECHNICAL SKILLS</h2>')
     B.append('<ul class="skills">' + "".join(f'<li><b>{esc(k)}:</b> {esc(v)}</li>' for k, v in T["skills"]) + '</ul>')
     B.append('<h2>PROJECTS</h2>')
-    head = T["project"]["head"]
-    head_html = esc(head).replace("github.com/patpadgett/corkscrew", '<a href="https://github.com/patpadgett/corkscrew">github.com/patpadgett/corkscrew</a>')
-    B.append(f'<p class="proj"><b>{head_html}</b></p>')
-    B.append(f'<p>{redline(T["project"]["desc"])}</p>')
+    for pr in T["projects"]:
+        head_html = re.sub(r"github\.com/patpadgett(/[A-Za-z0-9_-]+)?", lambda m: f'<a href="https://{m.group(0)}">{m.group(0)}</a>', esc(pr["head"]))
+        B.append(f'<p class="proj"><b>{head_html}</b></p>')
+        B.append(f'<p>{redline(pr["desc"])}</p>')
     B.append('<h2>EDUCATION AND PROFESSIONAL DEVELOPMENT</h2>')
     B.append(f'<div class="edu"><p>{esc(" | ".join(T["education"]))}</p><p class="profdev">{esc(" ".join(T["profdev"]))}</p></div>')
     return B
@@ -384,9 +396,14 @@ def page_html(T, blocks, paginated=None):
 def make_assets(T):
     from PIL import Image, ImageOps, ImageEnhance, ImageDraw
     A = ROOT / "assets"; F = A / "fonts"; F.mkdir(parents=True, exist_ok=True)
-    for fn in ["D-DIN.woff2", "D-DIN-Bold.woff2", "D-DIN-Italic.woff2", "D-DINExp-Bold.woff2"]:
-        shutil.copy(FONT_SRC / fn, F / fn)
-    shutil.copy(FONT_SRC / "COPYING.txt", F / "D-DIN-OFL.txt")
+    # the scratch download is pruned after 24 h; the fonts already shipped in assets/fonts/ are the fallback source
+    if FONT_SRC.exists():
+        for fn in ["D-DIN.woff2", "D-DIN-Bold.woff2", "D-DIN-Italic.woff2", "D-DINExp-Bold.woff2"]:
+            shutil.copy(FONT_SRC / fn, F / fn)
+        shutil.copy(FONT_SRC / "COPYING.txt", F / "D-DIN-OFL.txt")
+    else:
+        for fn in ["D-DIN.woff2", "D-DIN-Bold.woff2", "D-DIN-Italic.woff2", "D-DINExp-Bold.woff2", "D-DIN-OFL.txt"]:
+            assert (F / fn).exists(), f"font {fn} missing and {FONT_SRC} is gone"
     # headshot: one ink. grayscale, gentle contrast, sharpened for print
     im = Image.open(HEADSHOT_SRC).convert("L")
     im = ImageOps.autocontrast(im, cutoff=(0.3, 0.2))
@@ -405,6 +422,11 @@ def make_assets(T):
     from PIL import PngImagePlugin
     def png_meta(px):
         m = PngImagePlugin.PngInfo(); m.add_text("Comment", f"Origin: drawn by build.py mark(): D-DIN Exp Bold 'PP' in a pen-weight circle (PIL), {px}px; no generative imagery."); return m
+    if not (FONT_SRC / "D-DINExp-Bold.ttf").exists():
+        # icon set is static and already committed; the TTF source only exists while the scratch download is alive
+        for fn in ("icon-512.png", "apple-touch-icon.png", "icon.svg"): assert (A / fn).exists(), fn
+        assert (ROOT / "favicon.ico").exists()
+        return
     mark(512).save(A / "icon-512.png", optimize=True, pnginfo=png_meta(512))
     mark(180).save(A / "apple-touch-icon.png", optimize=True, pnginfo=png_meta(180))
     mark(64).save(ROOT / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
@@ -428,7 +450,7 @@ def make_docx_txt(T):
         L += [f"- {b}" for b in j["bullets"]] if j["bullets"] else ([j["line"]] if j.get("line") else [])
         L.append("")
     L += ["TECHNICAL SKILLS"] + [f"{k}: {v}" for k, v in T["skills"]] + [""]
-    L += ["PROJECTS", T["project"]["head"], T["project"]["desc"], "", "EDUCATION AND PROFESSIONAL DEVELOPMENT", " | ".join(T["education"])]
+    L += ["PROJECTS"] + sum([[pr["head"], pr["desc"], ""] for pr in T["projects"]], []) + ["EDUCATION AND PROFESSIONAL DEVELOPMENT", " | ".join(T["education"])]
     L += [f"- {d}" for d in T["profdev"]] + ["", "KEYWORDS", T["ats_line"], ""]
     txt = "\n".join(L); ascii_check(txt)
     (ROOT / "Patrick_Padgett_Resume.txt").write_text(txt)
@@ -463,7 +485,8 @@ def make_docx_txt(T):
     head("TECHNICAL SKILLS")
     for k, v in T["skills"]:
         p = d.add_paragraph(); r = p.add_run(k + ": "); r.bold = True; p.add_run(v); p.paragraph_format.space_after = Pt(2)
-    head("PROJECTS"); para(T["project"]["head"], bold=True, after=1); para(T["project"]["desc"])
+    head("PROJECTS")
+    for pr in T["projects"]: para(pr["head"], bold=True, after=1); para(pr["desc"])
     head("EDUCATION AND PROFESSIONAL DEVELOPMENT"); para(" | ".join(T["education"]), after=2); [bullet(x) for x in T["profdev"]]
     head("KEYWORDS"); para(T["ats_line"], size=9)
     d.save(ROOT / "Patrick_Padgett_Resume.docx")

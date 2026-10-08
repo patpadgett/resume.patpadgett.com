@@ -28,8 +28,8 @@
   --heavy: 2pt;              /* 0.7 mm */
   --fs: 9.4pt;
   --lh: 11.2pt;
-  --sheet-pad-x: 0.6in;
-  --sheet-pad-top: 0.55in;
+  --sheet-pad-x: 0.5in;         /* 2026-10-08: tightened from 0.6in to fit the 2026 tools in PROJECTS (owner: "make the margins tighter and leave the bullet") */
+  --sheet-pad-top: 0.42in;      /* was 0.55in */
   --sheet-pad-bottom: 0.35in;   /* the foot rests on the border line */
   --border-inset: 0.35in;
 }
@@ -144,22 +144,22 @@ h1 {
 
 .flow h2 {
   display: block;
-  margin: 12pt 0 5.5pt;
+  margin: 9pt 0 4pt;
   padding-bottom: 3pt;
   border-bottom: var(--med) solid var(--ink);
   font-size: 8.6pt; line-height: 10pt; font-weight: 700; letter-spacing: 0; word-spacing: 0.18em;
 }
-.flow .head + h2 { margin-top: 9pt; }
+.flow .head + h2 { margin-top: 7.5pt; }
 
-.flow p { margin: 0 0 2.5pt; }
+.flow p { margin: 0 0 2pt; }
 .flow ul { margin: 0 0 1pt; padding: 0 0 0 11pt; list-style: disc; }
-li { margin: 0 0 1.8pt; padding-left: 1pt; }
+li { margin: 0 0 1.4pt; padding-left: 1pt; }
 li::marker { color: var(--ink); font-size: 0.9em; }
 ul.skills { list-style: none; padding-left: 0; }
 ul.skills li { margin-bottom: 2pt; padding-left: 0; }
 ul.skills b { font-weight: 700; }
 
-.flow .job { margin-top: 6.5pt; }
+.flow .job { margin-top: 5.5pt; }
 .flow .job:first-child { margin-top: 0; }
 h3 { margin: 0; font-size: 9.6pt; line-height: 12pt; font-weight: 700; text-transform: uppercase; }
 h3 .loc { font-weight: 400; text-transform: none; }
